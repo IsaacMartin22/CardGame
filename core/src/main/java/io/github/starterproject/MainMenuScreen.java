@@ -6,7 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -15,21 +14,18 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenuScreen implements Screen {
     private final TheGameClass game;
-    private final Skin skin;        // member
     private final Stage stage;
 
     public MainMenuScreen(final TheGameClass game) {
         this.game = game;
-
-        this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.stage = new Stage(new ScreenViewport());
 
         Table table = new Table();
         table.setFillParent(true);
 
-        TextButton playButton = new TextButton("Play", skin);
-        TextButton settingsButton = new TextButton("Settings", skin);
-        TextButton quitButton = new TextButton("Quit", skin);
+        TextButton playButton = new TextButton("Play", game.skin);
+        TextButton settingsButton = new TextButton("Settings", game.skin);
+        TextButton quitButton = new TextButton("Quit", game.skin);
 
         table.bottom().left();
 
@@ -105,6 +101,5 @@ public class MainMenuScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
     }
 }

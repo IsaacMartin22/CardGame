@@ -1,8 +1,7 @@
 package io.github.starterproject;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -10,9 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
 public class DebugOverlay {
-
     private final Label label;
     private final Table table;
+    private boolean debugEnabled = true;
 
     public DebugOverlay(Stage stage, Skin skin) {
         label = new Label("", skin);
@@ -31,16 +30,16 @@ public class DebugOverlay {
     }
 
     public void update(String screenName) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            debugEnabled = !debugEnabled;
+            this.setVisible(debugEnabled);
+        }
+
         Runtime runtime = Runtime.getRuntime();
 
-        long usedMemory =
-            runtime.totalMemory() - runtime.freeMemory();
-
+        long usedMemory = runtime.totalMemory() - runtime.freeMemory();
         long usedMemoryMb = usedMemory / 1024 / 1024;
-
         int fps = Gdx.graphics.getFramesPerSecond();
-
-        //int drawCalls = Gdx.graphics.getFramesPerSecond();
 
         label.setText(
             "FPS: " + fps +
@@ -49,8 +48,7 @@ public class DebugOverlay {
         );
     }
 
-    public void dispose() {
-        // The Stage owns the label/table,
-        // so there's nothing to dispose here.
+    private void setVisible(boolean visible) {
+        table.setVisible(visible);
     }
 }

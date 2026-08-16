@@ -5,12 +5,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -18,61 +17,38 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameScreen implements Screen {
     final TheGameClass game;
+    final DebugOverlay debugOverlay;
 
     private Stage stage;
-    private Skin skin;
-
-    private Texture background;
-    private Texture image;
-    private Image backgroundImage;
-    private Image imageActor;
-    private Label fpsLabel;
 
     private Sound dropSound;
     private Music music;
 
     public GameScreen(final TheGameClass game) {
         this.game = game;
-
-        this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.stage = new Stage(new ScreenViewport());
 
-        background = new Texture("background.png");
-        image = new Texture("libgdx.png");
-
-        backgroundImage = new Image(background);
+        Image backgroundImage = new Image(game.assets.get("backgrounds/background.png", Texture.class));
         backgroundImage.setFillParent(true);
 
-        imageActor = new Image(image);
+        Image imageActor = new Image(game.assets.get("libgdx.png", Texture.class));
 
-        dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
-
-        music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+        this.dropSound = game.assets.get("audio/sfx/drop.mp3", Sound.class);
+        this.music = game.assets.get("audio/music/music.mp3", Music.class);
         music.setLooping(true);
-        music.setVolume(.5f);
+        music.setVolume(.0f);
 
         Table table = new Table();
         table.setFillParent(true);
         table.top().left();
 
-        fpsLabel = new Label("FPS: 0", skin);
-
         table.add(imageActor).expand().center();
-        table.row();
-        table.add(fpsLabel).left().pad(10);
 
         // background should be behind the UI table
         stage.addActor(backgroundImage);
         stage.addActor(table);
 
-        // clicking anywhere returns to main menu (keeps previous behavior)
-        stage.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuScreen(game));
-                dispose();
-            }
-        });
+        this.debugOverlay = new DebugOverlay(stage, game.skin);
     }
 
     @Override
@@ -83,10 +59,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+        ScreenUtils.clear(Color.BLACK);
 
         stage.act(delta);
-        fpsLabel.setText("FPS: " + Gdx.graphics.getFramesPerSecond());
+        debugOverlay.update("GameScreen");
         stage.draw();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -112,10 +88,5 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
-        image.dispose();
-        background.dispose();
-        dropSound.dispose();
-        music.dispose();
     }
 }
