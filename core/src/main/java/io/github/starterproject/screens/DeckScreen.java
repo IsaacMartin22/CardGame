@@ -1,23 +1,22 @@
-package io.github.starterproject;
+package io.github.starterproject.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import io.github.starterproject.TheGameClass;
 
-public class SettingsScreen implements Screen {
+public class DeckScreen implements Screen {
     private final TheGameClass game;     // member
     private final Stage stage;
 
-    public SettingsScreen(final TheGameClass game, Screen previousScreen) {
+    public DeckScreen(final TheGameClass game, Screen previousScreen) {
         this.game = game;
 
         this.stage = new Stage(new ScreenViewport());

@@ -1,7 +1,6 @@
-package io.github.starterproject;
+package io.github.starterproject.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,45 +10,45 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import io.github.starterproject.TheGameClass;
 
-public class MainMenuScreen implements Screen {
-    private final TheGameClass game;
+public class SettingsScreen implements Screen {
+    private final TheGameClass game;     // member
     private final Stage stage;
 
-    public MainMenuScreen(final TheGameClass game) {
+    public SettingsScreen(final TheGameClass game, Screen previousScreen) {
         this.game = game;
+
         this.stage = new Stage(new ScreenViewport());
 
         Table table = new Table();
         table.setFillParent(true);
 
-        TextButton playButton = new TextButton("Play", game.skin);
-        TextButton settingsButton = new TextButton("Settings", game.skin);
+        TextButton resumeButton = new TextButton("Resume", game.skin);
+        TextButton saveAndQuit = new TextButton("Save and Quit", game.skin);
         TextButton quitButton = new TextButton("Quit", game.skin);
 
-        table.bottom().left();
-
-        table.add(playButton).width(200).height(60).pad(10);
+        table.add(resumeButton).width(200).height(60).pad(10);
         table.row();
-        table.add(settingsButton).width(200).height(60).pad(10);
+        table.add(saveAndQuit).width(200).height(60).pad(10);
         table.row();
         table.add(quitButton).width(200).height(60).pad(10);
 
         stage.addActor(table);
 
-        playButton.addListener(new ClickListener() {
+        resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(previousScreen);
                 dispose();
             }
         });
 
-        settingsButton.addListener(new ClickListener() {
+        saveAndQuit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                openSettings();
-                //dispose();
+                game.setScreen(new MainMenuScreen(game));
+                dispose();
             }
         });
 
@@ -59,10 +58,6 @@ public class MainMenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
-    }
-
-    private void openSettings() {
-        game.setScreen(new SettingsScreen(game, this));
     }
 
     @Override
@@ -100,6 +95,6 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        stage.dispose();
+
     }
 }

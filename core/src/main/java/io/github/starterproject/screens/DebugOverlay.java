@@ -1,4 +1,4 @@
-package io.github.starterproject;
+package io.github.starterproject.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;

@@ -2,7 +2,6 @@ package io.github.starterproject.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import io.github.starterproject.GameScreen;
 import io.github.starterproject.TheGameClass;
 
 /** Launches the desktop (LWJGL3) application. */
