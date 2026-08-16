@@ -2,37 +2,42 @@ package io.github.starterproject;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class TheGameClass extends Game {
 
-    public SpriteBatch batch;
-    public BitmapFont font;
-    public FitViewport viewport;
-
+    public Stage stage;
+    public Skin skin;
 
     public void create() {
-        batch = new SpriteBatch();
-        // use libGDX's default font
-        font = new BitmapFont();
-        viewport = new FitViewport(8, 5);
+        // Use Scene2D UI for global/shared UI elements (if needed later)
+        this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+        this.stage = new Stage(new ScreenViewport());
 
-        //font has 15pt, but we need to scale it to our viewport by ratio of viewport height to screen height
-        font.setUseIntegerPositions(false);
-        font.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight());
+        Table table = new Table();
+        table.setFillParent(true);
+        Label title = new Label("Card Game", skin);
+        table.center();
+        table.add(title);
+        stage.addActor(table);
 
+        // start with main menu screen
         this.setScreen(new MainMenuScreen(this));
     }
 
+    @Override
     public void render() {
-        super.render(); // important!
+        super.render(); // delegates to current screen
     }
 
+    @Override
     public void dispose() {
-        batch.dispose();
-        font.dispose();
+        if (stage != null) stage.dispose();
+        if (skin != null) skin.dispose();
     }
 
 }

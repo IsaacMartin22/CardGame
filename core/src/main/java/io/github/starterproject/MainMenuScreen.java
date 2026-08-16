@@ -4,49 +4,87 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenuScreen implements Screen {
-    TheGameClass game;
+    private final TheGameClass game;
+    private final Skin skin;        // member
+    private final Stage stage;
 
     public MainMenuScreen(final TheGameClass game) {
         this.game = game;
+
+        this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+        this.stage = new Stage(new ScreenViewport());
+
+        Table table = new Table();
+        table.setFillParent(true);
+
+        TextButton playButton = new TextButton("Play", skin);
+        TextButton settingsButton = new TextButton("Settings", skin);
+        TextButton quitButton = new TextButton("Quit", skin);
+
+        table.bottom().left();
+
+        table.add(playButton).width(200).height(60).pad(10);
+        table.row();
+        table.add(settingsButton).width(200).height(60).pad(10);
+        table.row();
+        table.add(quitButton).width(200).height(60).pad(10);
+
+        stage.addActor(table);
+
+        playButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new GameScreen(game));
+                dispose();
+            }
+        });
+
+        settingsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                openSettings();
+                //dispose();
+            }
+        });
+
+        quitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+    }
+
+    private void openSettings() {
+        game.setScreen(new SettingsScreen(game, this));
     }
 
     @Override
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
 
-        game.viewport.apply();
-        game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
-
-        game.batch.begin();
-        //draw text. Remember that x and y are in meters
-        game.font.draw(game.batch, "Welcome to Drop!!! ", 1, 1.5f);
-        game.font.draw(game.batch, "Tap anywhere to begin!", 1, 1);
-        game.batch.end();
-
-        if (Gdx.input.justTouched()) {
-            game.setScreen(new GameScreen(game));
-            dispose();
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new SettingsScreen(game));
-            dispose();
-        }
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        game.viewport.update(width, height, true);
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
     public void show() {
-        // start the playback of the background music
-        // when the screen is shown
-        // music.play();
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -66,6 +104,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
+        skin.dispose();
     }
 }

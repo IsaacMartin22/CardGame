@@ -4,47 +4,70 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class SettingsScreen implements Screen {
-    TheGameClass game;
+    private final TheGameClass game;
+    private final Skin skin;        // member
+    private final Stage stage;
 
-    public SettingsScreen(final TheGameClass game) {
+    public SettingsScreen(final TheGameClass game, Screen previousScreen) {
         this.game = game;
+
+        this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+        this.stage = new Stage(new ScreenViewport());
+
+        Table table = new Table();
+        table.setFillParent(true);
+
+        TextButton resumeButton = new TextButton("Resume", skin);
+        TextButton quitButton = new TextButton("Quit", skin);
+
+        table.add(resumeButton).width(200).height(60).pad(10);
+        table.row();
+        table.add(quitButton).width(200).height(60).pad(10);
+
+        stage.addActor(table);
+
+        resumeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(previousScreen);
+                dispose();
+            }
+        });
+
+        quitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
     }
 
     @Override
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
 
-        game.viewport.apply();
-        game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
-
-        game.batch.begin();
-        //draw text. Remember that x and y are in meters
-        game.font.draw(game.batch, "Settings screen ", 3.75f, 1.5f);
-        game.font.draw(game.batch, "Press Esc to exit", 3.75f, 1);
-        game.batch.end();
-
-        if (Gdx.input.justTouched()) {
-            this.game.setScreen(new GameScreen(this.game));
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            Gdx.app.exit();
-        }
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        game.viewport.update(width, height, true);
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
     public void show() {
-        // start the playback of the background music
-        // when the screen is shown
-        // music.play();
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override

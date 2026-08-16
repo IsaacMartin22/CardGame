@@ -6,108 +6,115 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class GameScreen implements Screen {
     final TheGameClass game;
 
-    private SpriteBatch batch;
+    private Stage stage;
+    private Skin skin;
+
     private Texture background;
     private Texture image;
+    private Image backgroundImage;
+    private Image imageActor;
+    private Label fpsLabel;
+
     private Sound dropSound;
     private Music music;
 
-    private FitViewport viewport;
-
     public GameScreen(final TheGameClass game) {
         this.game = game;
-        batch = new SpriteBatch();
+
+        this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+        this.stage = new Stage(new ScreenViewport());
 
         background = new Texture("background.png");
         image = new Texture("libgdx.png");
 
-        viewport = new FitViewport(8, 5);
+        backgroundImage = new Image(background);
+        backgroundImage.setFillParent(true);
+
+        imageActor = new Image(image);
 
         dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
 
         music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
         music.setLooping(true);
         music.setVolume(.5f);
+
+        Table table = new Table();
+        table.setFillParent(true);
+        table.top().left();
+
+        fpsLabel = new Label("FPS: 0", skin);
+
+        table.add(imageActor).expand().center();
+        table.row();
+        table.add(fpsLabel).left().pad(10);
+
+        // background should be behind the UI table
+        stage.addActor(backgroundImage);
+        stage.addActor(table);
+
+        // clicking anywhere returns to main menu (keeps previous behavior)
+        stage.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MainMenuScreen(game));
+                dispose();
+            }
+        });
     }
 
     @Override
     public void show() {
-        // start the playback of the background music
-        // when the screen is shown
+        Gdx.input.setInputProcessor(stage);
         music.play();
     }
 
     @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
     public void render(float delta) {
-        input();
-        logic();
-        draw();
-
-        if (Gdx.input.justTouched()) {
-            game.setScreen(new MainMenuScreen(game));
-            dispose();
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new SettingsScreen(game));
-            dispose();
-        }
-    }
-
-    private void input() {
-
-    }
-
-    private void logic() {
-
-    }
-
-    private void draw() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
 
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
+        stage.act(delta);
+        fpsLabel.setText("FPS: " + Gdx.graphics.getFramesPerSecond());
+        stage.draw();
 
-        viewport.apply();
-        batch.setProjectionMatrix(viewport.getCamera().combined);
-        batch.begin();
-        batch.draw(background, 0, 0, worldWidth, worldHeight);
-        batch.draw(image, 140, 210);
-        batch.end();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.setScreen(new SettingsScreen(game, this));
+            music.pause();
+        }
     }
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true); // true centers the camera
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
+    public void pause() { }
+
+    @Override
+    public void resume() { }
+
+    @Override
+    public void hide() { }
+
+    @Override
     public void dispose() {
-        batch.dispose();
+        stage.dispose();
+        skin.dispose();
         image.dispose();
+        background.dispose();
         dropSound.dispose();
         music.dispose();
     }
