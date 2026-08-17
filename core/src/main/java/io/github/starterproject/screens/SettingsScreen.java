@@ -1,6 +1,7 @@
 package io.github.starterproject.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -16,7 +17,7 @@ public class SettingsScreen implements Screen {
     private final TheGameClass game;     // member
     private final Stage stage;
 
-    public SettingsScreen(final TheGameClass game, Screen previousScreen) {
+    public SettingsScreen(final TheGameClass game) {
         this.game = game;
 
         this.stage = new Stage(new ScreenViewport());
@@ -39,7 +40,7 @@ public class SettingsScreen implements Screen {
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(previousScreen);
+                game.screenStack.pop();
                 dispose();
             }
         });
@@ -47,7 +48,7 @@ public class SettingsScreen implements Screen {
         saveAndQuit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuScreen(game));
+                game.screenStack.popToRoot();
                 dispose();
             }
         });
@@ -66,6 +67,10 @@ public class SettingsScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.screenStack.pop();
+        }
     }
 
     @Override

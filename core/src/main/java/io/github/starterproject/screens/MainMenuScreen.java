@@ -40,7 +40,7 @@ public class MainMenuScreen implements Screen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game));
+                game.screenStack.push(new GameScreen(game));
                 dispose();
             }
         });
@@ -62,7 +62,7 @@ public class MainMenuScreen implements Screen {
     }
 
     private void openSettings() {
-        game.setScreen(new SettingsScreen(game, this));
+        game.screenStack.push(new SettingsScreen(game));
     }
 
     @Override

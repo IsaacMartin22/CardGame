@@ -11,25 +11,19 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.TheGameClass;
 import io.github.starterproject.cards.CardActor;
 
-public class DeckScreen implements Screen {
+public class MapScreen implements Screen {
     private final TheGameClass game;     // member
     private final Stage stage;
+    private boolean locked;
 
-    public DeckScreen(final TheGameClass game) {
+    public MapScreen(final TheGameClass game) {
         this.game = game;
-
+        this.locked = false;
         this.stage = new Stage(new ScreenViewport());
 
         Table table = new Table();
         table.setFillParent(true);
-        table.top().left();
-
-        for (int i = 0; i < game.deck.cards.size(); i++) {
-            table.add(new CardActor(game.deck.cards.get(i), game.skin)).width(100).height(200).pad(10);
-            if (i != 0 && i % 5 == 0) {
-                table.row();
-            }
-        }
+        table.top().center();
 
         stage.addActor(table);
 
@@ -37,14 +31,16 @@ public class DeckScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(Color.BROWN);
+        ScreenUtils.clear(Color.GOLDENROD);
 
         stage.act(delta);
         //debugOverlay.update("GameScreen");
         stage.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            game.screenStack.pop();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            if (!locked) {
+                game.screenStack.pop();
+            }
         }
     }
 

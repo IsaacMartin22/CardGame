@@ -65,11 +65,11 @@ public class GameScreen implements Screen {
         stage.draw();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            game.setScreen(new DeckScreen(game));
+            game.screenStack.push(new DeckScreen(game));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new SettingsScreen(game, this));
+            game.screenStack.push(new SettingsScreen(game));
             music.pause();
         }
     }

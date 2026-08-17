@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import io.github.starterproject.map.Floor;
 import io.github.starterproject.screens.MainMenuScreen;
 
 public class TheGameClass extends Game {
@@ -18,11 +19,14 @@ public class TheGameClass extends Game {
     public Stage stage;
     public Skin skin;
     public Deck deck;
+    public Floor floor;
+    public ScreenStack screenStack;
 
     public void create() {
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.stage = new Stage(new ScreenViewport());
         this.deck = new Deck();
+        this.screenStack = new ScreenStack(this);
 
         loadAssets();
 
@@ -34,7 +38,7 @@ public class TheGameClass extends Game {
         stage.addActor(table);
 
         // start with main menu screen
-        this.setScreen(new MainMenuScreen(this));
+        screenStack.push(new MainMenuScreen(this));
     }
 
     private void loadAssets() {
