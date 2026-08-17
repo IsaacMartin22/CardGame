@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.TheGameClass;
 import io.github.starterproject.cards.CardActor;
+import io.github.starterproject.map.MapNode;
 
 public class MapScreen implements Screen {
     private final TheGameClass game;     // member
@@ -24,6 +25,10 @@ public class MapScreen implements Screen {
         Table table = new Table();
         table.setFillParent(true);
         table.top().center();
+
+        for (MapNode node : game.floor.nodes) {
+            //table.add();
+        }
 
         stage.addActor(table);
 

@@ -27,6 +27,7 @@ public class TheGameClass extends Game {
         this.stage = new Stage(new ScreenViewport());
         this.deck = new Deck();
         this.screenStack = new ScreenStack(this);
+        this.floor = new Floor();
 
         loadAssets();
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Floor {
     public int number;
-    private List<MapNode> nodes;
+    public List<MapNode> nodes;
 
     public Floor() {
         this.number = 1;
@@ -15,13 +15,14 @@ public class Floor {
 
     public void generateNodes() {
         nodes.clear();
+        nodes.add(new Ancient());
         // Add ancient
         // Add normal enemy
 
         // randomly generate
 
         // Add Campfire
-        // Add boss
+        nodes.add(new Boss());
     }
 
     public void increaseFloor() {
