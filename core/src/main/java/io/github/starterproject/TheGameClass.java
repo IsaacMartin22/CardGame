@@ -17,10 +17,12 @@ public class TheGameClass extends Game {
     public AssetManager assets;
     public Stage stage;
     public Skin skin;
+    public Deck deck;
 
     public void create() {
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.stage = new Stage(new ScreenViewport());
+        this.deck = new Deck();
 
         loadAssets();
 

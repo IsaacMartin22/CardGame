@@ -9,14 +9,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class Deck {
-    List<Card> cards = new ArrayList<>();
+    public List<Card> cards = new ArrayList<>();
 
     public Deck() {
         for (int i = 0; i < 5; i++) {
             cards.add(new Defend());
             cards.add(new Strike());
         }
-        
+
         shuffle();
     }
 

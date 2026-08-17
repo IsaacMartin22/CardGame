@@ -64,6 +64,10 @@ public class GameScreen implements Screen {
         debugOverlay.update("GameScreen");
         stage.draw();
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            game.setScreen(new DeckScreen(game));
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new SettingsScreen(game, this));
             music.pause();
