@@ -47,7 +47,7 @@ public class TheGameClass extends Game {
         loadCards();
         loadSounds();
         loadBackgrounds();
-        loadLogos();
+        loadNodes();
         assets.finishLoading();
     }
 
@@ -57,6 +57,14 @@ public class TheGameClass extends Game {
         assets.load("cards/porkchop.png", Texture.class);
     }
 
+    private void loadNodes() {
+        assets.load("nodes/enemy.png", Texture.class);
+        assets.load("nodes/elite.png", Texture.class);
+        assets.load("nodes/event.png", Texture.class);
+        assets.load("nodes/campfire.png", Texture.class);
+        assets.load("nodes/merchant.png", Texture.class);
+    }
+
     private void loadSounds() {
         assets.load("audio/sfx/drop.mp3", Sound.class);
         assets.load("audio/music/music.mp3", Music.class);
@@ -64,10 +72,8 @@ public class TheGameClass extends Game {
 
     private void loadBackgrounds() {
         assets.load("backgrounds/background.png", Texture.class);
-    }
-
-    private void loadLogos() {
-        assets.load("libgdx.png", Texture.class);
+        assets.load("backgrounds/snowscape.png", Texture.class);
+        assets.load("backgrounds/map.png", Texture.class);
     }
 
     @Override

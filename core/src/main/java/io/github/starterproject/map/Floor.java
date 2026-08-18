@@ -15,14 +15,14 @@ public class Floor {
 
     public void generateNodes() {
         nodes.clear();
-        nodes.add(new Ancient());
-        // Add ancient
-        // Add normal enemy
+        nodes.add(new Boss());
+        nodes.add(new Campfire());
 
+        // Add normal enemy
         // randomly generate
 
-        // Add Campfire
-        nodes.add(new Boss());
+        nodes.add(new Enemy());
+        nodes.add(new Ancient());
     }
 
     public void increaseFloor() {

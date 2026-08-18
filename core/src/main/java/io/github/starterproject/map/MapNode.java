@@ -9,6 +9,8 @@ public abstract class MapNode {
         return constants[index];
     }
 
+    public abstract String getTexture();
+    public abstract String getName();
     public abstract MapNodeType getNodeType();
     public abstract int getWeight();
 }

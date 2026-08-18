@@ -1,18 +1,19 @@
 package io.github.starterproject.map;
 
-public class Ancient extends MapNode {
-    public AncientEntity entity;
-    public enum AncientEntity {
-        WHALE
+public class Enemy extends MapNode {
+    public EnemyEntity entity;
+    public enum EnemyEntity {
+        RAT,
+        SLIME,
     }
 
-    public Ancient() {
-        this.entity = randomEnum(AncientEntity.class);
+    public Enemy() {
+        this.entity = randomEnum(EnemyEntity.class);
     }
 
     @Override
     public String getTexture() {
-        return "nodes/elite.png";
+        return "nodes/enemy.png";
     }
 
     @Override
@@ -22,11 +23,11 @@ public class Ancient extends MapNode {
 
     @Override
     public MapNodeType getNodeType() {
-        return MapNodeType.ANCIENT;
+        return MapNodeType.ENEMY;
     }
 
     @Override
     public int getWeight() {
-        return 0;
+        return 3;
     }
 }

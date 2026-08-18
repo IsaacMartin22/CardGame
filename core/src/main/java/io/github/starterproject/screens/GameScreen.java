@@ -30,8 +30,6 @@ public class GameScreen implements Screen {
         Image backgroundImage = new Image(game.assets.get("backgrounds/background.png", Texture.class));
         backgroundImage.setFillParent(true);
 
-        Image imageActor = new Image(game.assets.get("libgdx.png", Texture.class));
-
         this.dropSound = game.assets.get("audio/sfx/drop.mp3", Sound.class);
         this.music = game.assets.get("audio/music/music.mp3", Music.class);
         music.setLooping(true);
@@ -40,8 +38,6 @@ public class GameScreen implements Screen {
         Table table = new Table();
         table.setFillParent(true);
         table.top().left();
-
-        table.add(imageActor).expand().center();
 
         // background should be behind the UI table
         stage.addActor(backgroundImage);
@@ -66,6 +62,10 @@ public class GameScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
             game.screenStack.push(new DeckScreen(game));
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            game.screenStack.push(new MapScreen(game));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
