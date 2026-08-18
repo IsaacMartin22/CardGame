@@ -13,24 +13,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.TheGameClass;
+import io.github.starterproject.overlays.DebugOverlay;
+import io.github.starterproject.overlays.RunInfoOverlay;
 
 public class GameScreen implements Screen {
     final TheGameClass game;
     final DebugOverlay debugOverlay;
+    final RunInfoOverlay runInfoOverlay;
 
     private Stage stage;
-
-    private Sound dropSound;
     private Music music;
 
     public GameScreen(final TheGameClass game) {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
-        Image backgroundImage = new Image(game.assets.get("backgrounds/background.png", Texture.class));
+
+        Image backgroundImage = new Image(game.assets.get("backgrounds/oasis.jpg", Texture.class));
         backgroundImage.setFillParent(true);
 
-        this.dropSound = game.assets.get("audio/sfx/drop.mp3", Sound.class);
         this.music = game.assets.get("audio/music/music.mp3", Music.class);
         music.setLooping(true);
         music.setVolume(.0f);
@@ -44,6 +45,8 @@ public class GameScreen implements Screen {
         stage.addActor(table);
 
         this.debugOverlay = new DebugOverlay(stage, game.skin);
+        this.runInfoOverlay = new RunInfoOverlay(game);
+        stage.addActor(runInfoOverlay);
     }
 
     @Override

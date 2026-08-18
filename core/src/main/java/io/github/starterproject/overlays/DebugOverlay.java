@@ -1,4 +1,4 @@
-package io.github.starterproject.screens;
+package io.github.starterproject.overlays;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -18,7 +18,7 @@ public class DebugOverlay {
         label.setAlignment(Align.left);
 
         table = new Table();
-        table.top().left();
+        table.bottom().left();
         table.setFillParent(true);
 
         table.add(label)

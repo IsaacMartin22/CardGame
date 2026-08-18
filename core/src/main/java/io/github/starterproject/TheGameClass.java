@@ -20,6 +20,7 @@ public class TheGameClass extends Game {
     public Skin skin;
     public Deck deck;
     public Floor floor;
+    public RunInfo runInfo;
     public ScreenStack screenStack;
 
     public void create() {
@@ -28,6 +29,7 @@ public class TheGameClass extends Game {
         this.deck = new Deck();
         this.screenStack = new ScreenStack(this);
         this.floor = new Floor();
+        this.runInfo = new RunInfo();
 
         loadAssets();
 
@@ -48,6 +50,7 @@ public class TheGameClass extends Game {
         loadSounds();
         loadBackgrounds();
         loadNodes();
+        loadIcons();
         assets.finishLoading();
     }
 
@@ -65,13 +68,23 @@ public class TheGameClass extends Game {
         assets.load("nodes/merchant.png", Texture.class);
     }
 
+    private void loadIcons() {
+        assets.load("icons/health.png", Texture.class);
+        assets.load("icons/gold.png", Texture.class);
+    }
+
     private void loadSounds() {
         assets.load("audio/sfx/drop.mp3", Sound.class);
         assets.load("audio/music/music.mp3", Music.class);
     }
 
     private void loadBackgrounds() {
-        assets.load("backgrounds/background.png", Texture.class);
+        // Jpg
+        assets.load("backgrounds/arctic.jpg", Texture.class);
+        assets.load("backgrounds/nighttime.jpg", Texture.class);
+        assets.load("backgrounds/oasis.jpg", Texture.class);
+
+        // Png
         assets.load("backgrounds/snowscape.png", Texture.class);
         assets.load("backgrounds/map.png", Texture.class);
     }

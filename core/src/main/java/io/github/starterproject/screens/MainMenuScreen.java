@@ -36,8 +36,6 @@ public class MainMenuScreen implements Screen {
         TextButton settingsButton = new TextButton("Settings", game.skin);
         TextButton quitButton = new TextButton("Quit", game.skin);
 
-
-
         table.bottom().left();
 
         table.add(titleLabel).width(400).height(200).pad(200);

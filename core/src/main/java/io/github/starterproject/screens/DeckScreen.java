@@ -17,7 +17,6 @@ public class DeckScreen implements Screen {
 
     public DeckScreen(final TheGameClass game) {
         this.game = game;
-
         this.stage = new Stage(new ScreenViewport());
 
         Table table = new Table();
@@ -75,6 +74,6 @@ public class DeckScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 }

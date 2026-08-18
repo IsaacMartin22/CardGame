@@ -50,7 +50,6 @@ public class MapScreen implements Screen {
         ScreenUtils.clear(Color.GOLDENROD);
 
         stage.act(delta);
-        //debugOverlay.update("GameScreen");
         stage.draw();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.M)) {
@@ -87,6 +86,6 @@ public class MapScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 }
