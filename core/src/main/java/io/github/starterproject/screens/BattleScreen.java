@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.Battle;
 import io.github.starterproject.game.BattleEnemy;
 import io.github.starterproject.game.TheGameClass;
+import io.github.starterproject.map.MapNodeType;
 import io.github.starterproject.overlays.DebugOverlay;
 import io.github.starterproject.overlays.RunInfoOverlay;
 
@@ -32,12 +33,24 @@ public class BattleScreen implements Screen {
     private Stage stage;
     private Music music;
 
-    public BattleScreen(final TheGameClass game) {
+    public BattleScreen(final TheGameClass game, MapNodeType type) {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
         this.battle = new Battle(game, new BattleEnemy());
 
-        Image backgroundImage = new Image(game.assets.get("backgrounds/oasis.jpg", Texture.class));
+        String backgroundFilename = "backgrounds/oasis.jpg";
+        switch (type) {
+            case BOSS:
+                backgroundFilename = "backgrounds/boss_background.jpg";
+                break;
+            case ELITE:
+                backgroundFilename = "backgrounds/elite_background.jpg";
+                break;
+            case ENEMY:
+                backgroundFilename = "backgrounds/oasis.jpg";
+        }
+
+        Image backgroundImage = new Image(game.assets.get(backgroundFilename, Texture.class));
         backgroundImage.setFillParent(true);
 
         this.music = game.assets.get("audio/music/music.mp3", Music.class);

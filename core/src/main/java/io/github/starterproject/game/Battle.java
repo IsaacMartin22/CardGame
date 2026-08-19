@@ -32,8 +32,8 @@ public class Battle {
         discardPile.clear();
         exhaustPile.clear();
 
-        if (deck != null && deck.cards != null) {
-            drawPile.addAll(deck.cards);
+        if (deck != null && deck.getCards() != null) {
+            drawPile.addAll(deck.getCards());
             Collections.shuffle(drawPile);
         }
     }

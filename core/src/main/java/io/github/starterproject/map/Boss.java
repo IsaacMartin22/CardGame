@@ -23,7 +23,7 @@ public class Boss extends MapNode {
 
     @Override
     public String getMapTexture() {
-        return "nodes/elite.png";
+        return "nodes/boss.png";
     }
 
     @Override

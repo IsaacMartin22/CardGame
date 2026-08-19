@@ -19,12 +19,13 @@ public class TheGameClass extends Game {
     public AssetManager assets;
     public Stage stage;
     public Skin skin;
+    public ScreenStack screenStack;
+
     public Deck deck;
     public Level level;
     public Player player;
     public RunInfo runInfo;
     public Difficulty difficulty;
-    public ScreenStack screenStack;
 
     public void create() {
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -38,15 +39,15 @@ public class TheGameClass extends Game {
 
         loadAssets();
 
-        Table table = new Table();
-        table.setFillParent(true);
-        Label title = new Label("Card Game", skin);
-        table.center();
-        table.add(title);
-        stage.addActor(table);
-
         // start with main menu screen
         screenStack.push(new MainMenuScreen(this));
+    }
+
+    public void reset() {
+        player.reset();
+        deck.reset();
+        level.reset();
+        runInfo.reset();
     }
 
     private void loadAssets() {
@@ -71,6 +72,8 @@ public class TheGameClass extends Game {
         assets.load("nodes/event.png", Texture.class);
         assets.load("nodes/campfire.png", Texture.class);
         assets.load("nodes/merchant.png", Texture.class);
+        assets.load("nodes/boss.png", Texture.class);
+        assets.load("nodes/ancient.png", Texture.class);
     }
 
     private void loadIcons() {
@@ -98,6 +101,10 @@ public class TheGameClass extends Game {
         assets.load("backgrounds/map.png", Texture.class);
         assets.load("backgrounds/campfire_background.png", Texture.class);
         assets.load("backgrounds/merchant_background.png", Texture.class);
+        assets.load("backgrounds/treasure_chest.png", Texture.class);
+        assets.load("backgrounds/ancient_background.png", Texture.class);
+        assets.load("backgrounds/boss_background.jpg", Texture.class);
+        assets.load("backgrounds/elite_background.jpg", Texture.class);
     }
 
     @Override

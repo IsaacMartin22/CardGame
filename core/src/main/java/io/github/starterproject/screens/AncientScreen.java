@@ -5,8 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
@@ -24,14 +28,28 @@ public class AncientScreen implements Screen {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
-        Image backgroundImage = new Image(game.assets.get("backgrounds/oasis.jpg", Texture.class));
+        Image backgroundImage = new Image(game.assets.get("backgrounds/ancient_background.png", Texture.class));
         backgroundImage.setFillParent(true);
 
+        TextButton moveOnButton = new TextButton("Move On", game.skin);
+        Table table = new Table();
+        table.setFillParent(true);
+        table.bottom().right();
+        table.add(moveOnButton).width(200).height(100).pad(100);
+
         stage.addActor(backgroundImage);
+        stage.addActor(table);
 
         this.debugOverlay = new DebugOverlay(stage, game.skin);
         this.runInfoOverlay = new RunInfoOverlay(game);
         stage.addActor(runInfoOverlay);
+
+        moveOnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.screenStack.pop();
+            }
+        });
     }
 
     @Override

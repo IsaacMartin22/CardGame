@@ -13,10 +13,14 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
+import io.github.starterproject.overlays.DebugOverlay;
+import io.github.starterproject.overlays.RunInfoOverlay;
 
 public class CampfireScreen implements Screen {
     private final TheGameClass game;     // member
     private final Stage stage;
+    final DebugOverlay debugOverlay;
+    final RunInfoOverlay runInfoOverlay;
 
     public CampfireScreen(final TheGameClass game) {
         this.game = game;
@@ -24,17 +28,21 @@ public class CampfireScreen implements Screen {
 
         Image campfire = new Image(game.assets.get("backgrounds/campfire_background.png", Texture.class));
         campfire.setFillParent(true);
-        ImageButton rest = new ImageButton(game.skin);
-        ImageButton upgrade = new ImageButton(game.skin);
+//        ImageButton rest = new ImageButton(game.skin);
+//        ImageButton upgrade = new ImageButton(game.skin);
 
         Table table = new Table();
         table.setFillParent(true);
         table.center().align(Align.center);
         table.add(campfire);
-        table.add(rest);
-        table.add(upgrade);
+//        table.add(rest);
+//        table.add(upgrade);
 
         stage.addActor(table);
+
+        this.debugOverlay = new DebugOverlay(stage, game.skin);
+        this.runInfoOverlay = new RunInfoOverlay(game);
+        stage.addActor(runInfoOverlay);
 
     }
 
@@ -43,7 +51,7 @@ public class CampfireScreen implements Screen {
         ScreenUtils.clear(Color.CYAN);
 
         stage.act(delta);
-        //debugOverlay.update("GameScreen");
+        debugOverlay.update("CampfireScreen");
         stage.draw();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.D)) {

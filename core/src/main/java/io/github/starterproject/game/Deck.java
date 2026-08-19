@@ -9,13 +9,22 @@ import java.util.Collections;
 import java.util.List;
 
 public class Deck {
-    public List<Card> cards = new ArrayList<>();
+    private List<Card> cards = new ArrayList<>();
 
     public Deck() {
+        reset();
+    }
+
+    public void reset() {
+        cards.clear();
         for (int i = 0; i < 5; i++) {
-            cards.add(new Defend());
-            cards.add(new Strike());
+            addCard(new Defend());
+            addCard(new Strike());
         }
+    }
+
+    public List<Card> getCards() {
+        return cards;
     }
 
     public void addCard(Card card) {

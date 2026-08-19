@@ -13,14 +13,20 @@ public class Level {
         generateNodes();
     }
 
+    public void reset() {
+        number = 1;
+        generateNodes();
+    }
+
     public void generateNodes() {
         nodes.clear();
         nodes.add(new Boss());
         nodes.add(new Campfire());
-
-        // Add normal enemy
-        // randomly generate
-
+        nodes.add(new Merchant());
+        nodes.add(new Enemy());
+        nodes.add(new Treasure());
+        nodes.add(new Enemy());
+        nodes.add(new Enemy());
         nodes.add(new Enemy());
         nodes.add(new Ancient());
     }

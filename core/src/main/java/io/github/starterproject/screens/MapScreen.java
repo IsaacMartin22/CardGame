@@ -35,7 +35,6 @@ public class MapScreen implements Screen {
         this.stage = new Stage(new ScreenViewport());
 
         Image mapBackground = new Image(game.assets.get("backgrounds/map.png", Texture.class));
-        mapBackground.setAlign(Align.center);
         mapBackground.setPosition(game.stage.getWidth() / 2, game.stage.getHeight() / 2, Align.center);
 
         Table table = new Table();
@@ -45,7 +44,7 @@ public class MapScreen implements Screen {
         stage.addActor(mapBackground);
 
         for (MapNode node : game.level.nodes) {
-            table.add(new MapNodeActor(node, node.getOnClick(), game.skin)).width(100).height(100).pad(10);
+            table.add(new MapNodeActor(node, this::openNode, game.skin)).width(75).height(75).pad(10);
             table.row();
         }
 
@@ -68,18 +67,39 @@ public class MapScreen implements Screen {
             game.screenStack.push(new SettingsScreen(game));
         }
 
-        if (locked) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-                game.screenStack.push(new BattleScreen(game));
-            }
-        }
-        else {
+        if (!locked) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
                 game.screenStack.pop();
             }
         }
+    }
 
-
+    private void openNode(MapNode node) {
+        if (!node.visited) {
+            node.visited = true;
+            switch (node.getNodeType()) {
+                case ENEMY:
+                case ELITE:
+                case BOSS:
+                    game.screenStack.push(new BattleScreen(game, node.getNodeType()));
+                    break;
+                case CAMPFIRE:
+                    game.screenStack.push(new CampfireScreen(game));
+                    break;
+                case ANCIENT:
+                    game.screenStack.push(new AncientScreen(game));
+                    break;
+                case EVENT:
+                    game.screenStack.push(new EventScreen(game));
+                    break;
+                case MERCHANT:
+                    game.screenStack.push(new MerchantScreen(game));
+                    break;
+                case TREASURE:
+                    game.screenStack.push(new TreasureScreen(game));
+                    break;
+            }
+        }
     }
 
     @Override
