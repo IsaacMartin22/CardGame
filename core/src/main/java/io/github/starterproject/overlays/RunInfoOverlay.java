@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import io.github.starterproject.TheGameClass;
+import io.github.starterproject.game.TheGameClass;
 
 public class RunInfoOverlay extends Table {
     public RunInfoOverlay(final TheGameClass game) {
@@ -30,11 +30,11 @@ public class RunInfoOverlay extends Table {
         this.setPosition(0, com.badlogic.gdx.Gdx.graphics.getHeight() - 80);
 
         Image healthPng = new Image(game.assets.get("icons/health.png", Texture.class));
-        Label healthText = new Label(game.runInfo.currentHealth + "/" + game.runInfo.maxHealth, game.skin);
+        Label healthText = new Label(game.player.currentHP + "/" + game.player.maxHP, game.skin);
         healthText.setFontScale(3f);
 
         Image goldPng = new Image(game.assets.get("icons/gold.png", Texture.class));
-        Label goldText = new Label(String.valueOf(game.runInfo.gold), game.skin);
+        Label goldText = new Label(String.valueOf(game.player.gold), game.skin);
         goldText.setFontScale(3f);
 
         this.add(healthPng).width(60).height(60).pad(10);

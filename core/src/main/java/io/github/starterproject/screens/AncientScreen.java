@@ -3,44 +3,31 @@ package io.github.starterproject.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
 import io.github.starterproject.overlays.DebugOverlay;
 import io.github.starterproject.overlays.RunInfoOverlay;
 
-public class BattleScreen implements Screen {
+public class AncientScreen implements Screen {
     final TheGameClass game;
     final DebugOverlay debugOverlay;
     final RunInfoOverlay runInfoOverlay;
 
     private Stage stage;
-    private Music music;
 
-    public BattleScreen(final TheGameClass game) {
+    public AncientScreen(final TheGameClass game) {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
         Image backgroundImage = new Image(game.assets.get("backgrounds/oasis.jpg", Texture.class));
         backgroundImage.setFillParent(true);
 
-        this.music = game.assets.get("audio/music/music.mp3", Music.class);
-        music.setLooping(true);
-        music.setVolume(.0f);
-
-        Table table = new Table();
-        table.setFillParent(true);
-        table.top().left();
-
-        // background should be behind the UI table
         stage.addActor(backgroundImage);
-        stage.addActor(table);
 
         this.debugOverlay = new DebugOverlay(stage, game.skin);
         this.runInfoOverlay = new RunInfoOverlay(game);
@@ -50,7 +37,6 @@ public class BattleScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        music.play();
     }
 
     @Override
@@ -71,7 +57,6 @@ public class BattleScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.screenStack.push(new SettingsScreen(game));
-            music.pause();
         }
     }
 

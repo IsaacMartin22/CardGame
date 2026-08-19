@@ -2,17 +2,23 @@ package io.github.starterproject.map;
 
 public class Enemy extends MapNode {
     public EnemyEntity entity;
+
     public enum EnemyEntity {
         RAT,
         SLIME,
     }
 
-    public Enemy() {
+     public Enemy() {
         this.entity = randomEnum(EnemyEntity.class);
     }
 
     @Override
-    public String getTexture() {
+    public Runnable getOnClick() {
+        return null;
+    }
+
+    @Override
+    public String getMapTexture() {
         return "nodes/enemy.png";
     }
 

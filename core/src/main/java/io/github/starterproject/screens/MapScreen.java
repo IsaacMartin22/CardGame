@@ -11,14 +11,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import io.github.starterproject.TheGameClass;
+import io.github.starterproject.game.TheGameClass;
 import io.github.starterproject.map.MapNode;
 import io.github.starterproject.map.MapNodeActor;
+import io.github.starterproject.overlays.DebugOverlay;
+import io.github.starterproject.overlays.RunInfoOverlay;
 
 public class MapScreen implements Screen {
     private final TheGameClass game;     // member
     private final Stage stage;
     private boolean locked;
+    final DebugOverlay debugOverlay;
+    final RunInfoOverlay runInfoOverlay;
+
+    public MapScreen(final TheGameClass game, boolean locked) {
+        this(game);
+        this.locked = locked;
+    }
 
     public MapScreen(final TheGameClass game) {
         this.game = game;
@@ -35,11 +44,14 @@ public class MapScreen implements Screen {
 
         stage.addActor(mapBackground);
 
-        for (MapNode node : game.floor.nodes) {
-            table.add(new MapNodeActor(node, game.skin)).width(100).height(100).pad(10);
+        for (MapNode node : game.level.nodes) {
+            table.add(new MapNodeActor(node, node.getOnClick(), game.skin)).width(100).height(100).pad(10);
             table.row();
         }
 
+        this.debugOverlay = new DebugOverlay(stage, game.skin);
+        this.runInfoOverlay = new RunInfoOverlay(game);
+        stage.addActor(runInfoOverlay);
 
         stage.addActor(table);
 
@@ -52,11 +64,22 @@ public class MapScreen implements Screen {
         stage.act(delta);
         stage.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            if (!locked) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.screenStack.push(new SettingsScreen(game));
+        }
+
+        if (locked) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+                game.screenStack.push(new BattleScreen(game));
+            }
+        }
+        else {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
                 game.screenStack.pop();
             }
         }
+
+
     }
 
     @Override

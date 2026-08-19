@@ -2,13 +2,14 @@ package io.github.starterproject.map;
 
 public class Boss extends MapNode {
     public BossEntity entity;
+
     public enum BossEntity {
-        CEREMONIAL_BEAST,
-        VANTOM,
-        KIN,
-        WATERFALL_GIANT,
-        SOUL_FYSH,
-        LAGAVULIN_MATRIARCH,
+        STAG,
+        INKY_STABBY,
+        BOULDER_TROLLS,
+        WATERFALL,
+        FISH,
+        HERMIT_CRAB,
     }
 
     public Boss() {
@@ -16,7 +17,12 @@ public class Boss extends MapNode {
     }
 
     @Override
-    public String getTexture() {
+    public Runnable getOnClick() {
+        return null;
+    }
+
+    @Override
+    public String getMapTexture() {
         return "nodes/elite.png";
     }
 

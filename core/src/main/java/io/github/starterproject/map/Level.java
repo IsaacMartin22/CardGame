@@ -3,11 +3,11 @@ package io.github.starterproject.map;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Floor {
+public class Level {
     public int number;
     public List<MapNode> nodes;
 
-    public Floor() {
+    public Level() {
         this.number = 1;
         this.nodes = new ArrayList<>();
         generateNodes();

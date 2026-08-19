@@ -1,4 +1,4 @@
-package io.github.starterproject;
+package io.github.starterproject.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -11,7 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import io.github.starterproject.map.Floor;
+import io.github.starterproject.screens.ScreenStack;
+import io.github.starterproject.map.Level;
 import io.github.starterproject.screens.MainMenuScreen;
 
 public class TheGameClass extends Game {
@@ -19,8 +20,10 @@ public class TheGameClass extends Game {
     public Stage stage;
     public Skin skin;
     public Deck deck;
-    public Floor floor;
+    public Level level;
+    public Player player;
     public RunInfo runInfo;
+    public Difficulty difficulty;
     public ScreenStack screenStack;
 
     public void create() {
@@ -28,8 +31,10 @@ public class TheGameClass extends Game {
         this.stage = new Stage(new ScreenViewport());
         this.deck = new Deck();
         this.screenStack = new ScreenStack(this);
-        this.floor = new Floor();
+        this.level = new Level();
+        this.player = new Player();
         this.runInfo = new RunInfo();
+        this.difficulty = new Difficulty();
 
         loadAssets();
 
@@ -84,9 +89,15 @@ public class TheGameClass extends Game {
         assets.load("backgrounds/nighttime.jpg", Texture.class);
         assets.load("backgrounds/oasis.jpg", Texture.class);
 
+        assets.load("backgrounds/battle_background.jpg", Texture.class);
+
+        assets.load("backgrounds/death.jpg", Texture.class);
+
         // Png
         assets.load("backgrounds/snowscape.png", Texture.class);
         assets.load("backgrounds/map.png", Texture.class);
+        assets.load("backgrounds/campfire_background.png", Texture.class);
+        assets.load("backgrounds/merchant_background.png", Texture.class);
     }
 
     @Override

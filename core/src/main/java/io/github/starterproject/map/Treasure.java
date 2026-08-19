@@ -1,7 +1,7 @@
 package io.github.starterproject.map;
 
-public class Campfire extends MapNode {
-    public Campfire() {
+public class Treasure extends MapNode {
+    public Treasure() {
         super();
     }
 

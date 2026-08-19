@@ -1,4 +1,4 @@
-package io.github.starterproject;
+package io.github.starterproject.game;
 
 import io.github.starterproject.cards.Card;
 import io.github.starterproject.cards.Defend;

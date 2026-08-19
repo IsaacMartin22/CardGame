@@ -1,6 +1,8 @@
-package io.github.starterproject;
+package io.github.starterproject.screens;
 
 import com.badlogic.gdx.Screen;
+import io.github.starterproject.game.TheGameClass;
+
 import java.util.Stack;
 
 public class ScreenStack {

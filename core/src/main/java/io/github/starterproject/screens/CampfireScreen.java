@@ -4,31 +4,35 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
-import io.github.starterproject.cards.CardActor;
 
-public class DeckScreen implements Screen {
+public class CampfireScreen implements Screen {
     private final TheGameClass game;     // member
     private final Stage stage;
 
-    public DeckScreen(final TheGameClass game) {
+    public CampfireScreen(final TheGameClass game) {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
+        Image campfire = new Image(game.assets.get("backgrounds/campfire_background.png", Texture.class));
+        campfire.setFillParent(true);
+        ImageButton rest = new ImageButton(game.skin);
+        ImageButton upgrade = new ImageButton(game.skin);
+
         Table table = new Table();
         table.setFillParent(true);
-        table.top().left();
-
-        for (int i = 0; i < game.deck.cards.size(); i++) {
-            table.add(new CardActor(game.deck.cards.get(i), game.skin)).width(100).height(200).pad(10);
-            if (i != 0 && i % 5 == 0) {
-                table.row();
-            }
-        }
+        table.center().align(Align.center);
+        table.add(campfire);
+        table.add(rest);
+        table.add(upgrade);
 
         stage.addActor(table);
 
@@ -36,7 +40,7 @@ public class DeckScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(Color.BROWN);
+        ScreenUtils.clear(Color.CYAN);
 
         stage.act(delta);
         //debugOverlay.update("GameScreen");

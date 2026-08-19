@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import io.github.starterproject.TheGameClass;
+import io.github.starterproject.game.TheGameClass;
 
 public class SettingsScreen implements Screen {
     private final TheGameClass game;     // member

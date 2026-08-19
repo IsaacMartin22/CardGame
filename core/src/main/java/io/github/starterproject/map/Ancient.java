@@ -11,7 +11,12 @@ public class Ancient extends MapNode {
     }
 
     @Override
-    public String getTexture() {
+    public Runnable getOnClick() {
+        return null;
+    }
+
+    @Override
+    public String getMapTexture() {
         return "nodes/elite.png";
     }
 
