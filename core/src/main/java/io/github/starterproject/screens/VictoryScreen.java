@@ -14,32 +14,32 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
 
-public class DeathScreen implements Screen {
+public class VictoryScreen implements Screen {
     private final TheGameClass game;     // member
     private final Stage stage;
 
-    public DeathScreen(final TheGameClass game) {
+    public VictoryScreen(final TheGameClass game) {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
         Table table = new Table();
         table.setFillParent(true);
 
-        Image backgroundImage = new Image(game.assets.get("backgrounds/death.jpg", com.badlogic.gdx.graphics.Texture.class));
+        Image backgroundImage = new Image(game.assets.get("backgrounds/battle_background.jpg", com.badlogic.gdx.graphics.Texture.class));
         backgroundImage.setFillParent(true);
 
-        TextButton returnToTitle = new TextButton("Return to Title Screen", game.skin);
+        TextButton resume = new TextButton("Resume", game.skin);
 
         table.add(backgroundImage).fill().expand();
         table.row();
-        table.add(returnToTitle).width(200).height(60).pad(10);
+        table.add(resume).width(200).height(60).pad(10);
 
         stage.addActor(table);
 
-        returnToTitle.addListener(new ClickListener() {
+        resume.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.screenStack.popToRoot();
+                game.screenStack.pop();
                 dispose();
             }
         });

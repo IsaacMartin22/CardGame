@@ -16,13 +16,6 @@ public class Deck {
             cards.add(new Defend());
             cards.add(new Strike());
         }
-
-        shuffle();
-    }
-
-    public void shuffle()
-    {
-        Collections.shuffle(cards);
     }
 
     public void addCard(Card card) {

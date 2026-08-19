@@ -59,7 +59,6 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 MapScreen mapScreen = new MapScreen(game, true);
                 game.screenStack.push(mapScreen);
-                dispose();
             }
         });
 
