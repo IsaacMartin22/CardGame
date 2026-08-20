@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import io.github.starterproject.cards.CardActor;
 import io.github.starterproject.screens.ScreenStack;
 import io.github.starterproject.map.Level;
 import io.github.starterproject.screens.MainMenuScreen;
@@ -118,6 +119,7 @@ public class TheGameClass extends Game {
         if (stage != null) stage.dispose();
         if (skin != null) skin.dispose();
         if (assets != null) assets.dispose();
+        CardActor.disposeTemplates();
     }
 
 }

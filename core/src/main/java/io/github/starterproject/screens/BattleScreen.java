@@ -15,8 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import io.github.starterproject.cards.CardActor;
 import io.github.starterproject.game.Battle;
 import io.github.starterproject.game.BattleEnemy;
+import io.github.starterproject.game.Hand;
 import io.github.starterproject.game.TheGameClass;
 import io.github.starterproject.map.MapNodeType;
 import io.github.starterproject.overlays.DebugOverlay;
@@ -31,12 +33,15 @@ public class BattleScreen implements Screen {
     public Label enemyHealthLabel;
 
     private Stage stage;
+    private Table handTable;
     private Music music;
 
     public BattleScreen(final TheGameClass game, MapNodeType type) {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
         this.battle = new Battle(game, new BattleEnemy());
+        this.battle.initializePiles(game.deck);
+        this.battle.drawCards(Hand.HAND_LIMIT);
 
         String backgroundFilename = "backgrounds/oasis.jpg";
         switch (type) {
@@ -57,23 +62,35 @@ public class BattleScreen implements Screen {
         music.setLooping(true);
         music.setVolume(.0f);
 
+        handTable = new Table();
+        handTable.left();
+
         TextButton endTurn = new TextButton("End Turn", game.skin);
 
-        Table table = new Table();
-        table.setFillParent(true);
-        table.bottom().right();
+        Table healthBars = new Table();
+        healthBars.top().right();
 
         playerHealthLabel = new Label("Player Health: " + battle.getPlayerHealth(), game.skin);
-        table.add(playerHealthLabel).width(300).height(100).pad(100);
+        healthBars.add(playerHealthLabel).width(300).height(100).pad(100);
 
         enemyHealthLabel = new Label("Enemy Health: " + battle.getEnemyHealth(), game.skin);
-        table.add(enemyHealthLabel).width(300).height(100).pad(100);
+        healthBars.add(enemyHealthLabel).width(300).height(100).pad(100);
 
-        table.add(endTurn).width(200).height(100).pad(100);
+        healthBars.add(endTurn).width(200).height(100).pad(100);
+
+        Table rootTable = new Table();
+        rootTable.setFillParent(true);
+        rootTable.top();
+        rootTable.row();
+        rootTable.add().expandY().fill();
+        rootTable.row();
+        rootTable.add(healthBars).expandX().top().right();
+        rootTable.row();
+        rootTable.add(handTable).expandX().bottom().center().padBottom(2f);
 
         // background should be behind the UI table
         stage.addActor(backgroundImage);
-        stage.addActor(table);
+        stage.addActor(rootTable);
 
         this.debugOverlay = new DebugOverlay(stage, game.skin);
         this.runInfoOverlay = new RunInfoOverlay(game);
@@ -105,6 +122,7 @@ public class BattleScreen implements Screen {
 
         playerHealthLabel.setText("Player Health: " + battle.getPlayerHealth());
         enemyHealthLabel.setText("Enemy Health: " + battle.getEnemyHealth());
+        refreshHandTable();
 
         stage.act(delta);
         debugOverlay.update("GameScreen");
@@ -141,5 +159,13 @@ public class BattleScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    private void refreshHandTable() {
+        handTable.clearChildren();
+
+        for (int i = 0; i < battle.getHand().getCards().size(); i++) {
+            handTable.add(new CardActor(battle.getHand().getCards().get(i), game.skin, game.assets)).width(100).height(200).pad(8f);
+        }
     }
 }

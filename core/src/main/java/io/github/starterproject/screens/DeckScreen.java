@@ -24,7 +24,7 @@ public class DeckScreen implements Screen {
         table.top().left();
 
         for (int i = 0; i < game.deck.getCards().size(); i++) {
-            table.add(new CardActor(game.deck.getCards().get(i), game.skin)).width(100).height(200).pad(10);
+            table.add(new CardActor(game.deck.getCards().get(i), game.skin, game.assets)).width(100).height(200).pad(10);
             if (i != 0 && i % 5 == 0) {
                 table.row();
             }
