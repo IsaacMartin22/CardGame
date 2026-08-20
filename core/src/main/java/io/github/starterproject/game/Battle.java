@@ -1,6 +1,7 @@
 package io.github.starterproject.game;
 
 import io.github.starterproject.cards.Card;
+import io.github.starterproject.cards.CardType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,6 +65,34 @@ public class Battle {
         return drawn;
     }
 
+    public boolean playCardFromHand(int handIndex) {
+        Card card = hand.getCard(handIndex);
+        if (card == null) {
+            return false;
+        }
+
+        boolean played = false;
+        switch (card.getType()) {
+            case ATTACK:
+                enemy.currentHP -= 6;
+                played = true;
+                break;
+            case SKILL:
+                game.player.currentBlock += 5;
+                played = true;
+                break;
+            case POWER:
+                played = false;
+                break;
+        }
+
+        if (played) {
+            discardCardFromHand(handIndex);
+        }
+
+        return played;
+    }
+
     public Card discardCardFromHand(int handIndex) {
         Card card = hand.removeCard(handIndex);
         if (card != null) {
@@ -93,7 +122,12 @@ public class Battle {
         discardHand();
         turn = Turn.ENEMY;
 
-        game.player.currentHP -= 6;
+        int incomingDamage = 6;
+        int blocked = Math.min(game.player.currentBlock, incomingDamage);
+        game.player.currentBlock -= blocked;
+        incomingDamage -= blocked;
+        game.player.currentHP -= incomingDamage;
+        game.player.currentBlock = 0;
         endEnemyTurn();
     }
 

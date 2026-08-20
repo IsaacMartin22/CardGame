@@ -4,9 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -15,30 +19,71 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
 
 public class VictoryScreen implements Screen {
-    private final TheGameClass game;     // member
+    private final TheGameClass game;
     private final Stage stage;
+    private final Screen backgroundScreen;
+    private final Texture dimTexture;
 
     public VictoryScreen(final TheGameClass game) {
         this.game = game;
+        this.backgroundScreen = game.screenStack.peek();
         this.stage = new Stage(new ScreenViewport());
 
-        Table table = new Table();
-        table.setFillParent(true);
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(0f, 0f, 0f, 0.6f);
+        pixmap.fill();
+        this.dimTexture = new Texture(pixmap);
+        pixmap.dispose();
 
-        Image backgroundImage = new Image(game.assets.get("backgrounds/battle_background.jpg", com.badlogic.gdx.graphics.Texture.class));
-        backgroundImage.setFillParent(true);
+        Image dimOverlay = new Image(dimTexture);
+        dimOverlay.setFillParent(true);
+        dimOverlay.setTouchable(Touchable.enabled);
 
-        TextButton resume = new TextButton("Resume", game.skin);
+        Table modal = new Table(game.skin);
+        modal.setBackground("default-round");
+        modal.defaults().width(220).height(60).pad(8);
 
-        table.add(backgroundImage).fill().expand();
-        table.row();
-        table.add(resume).width(200).height(60).pad(10);
+        TextButton rewardOne = new TextButton("Reward 1", game.skin);
+        TextButton rewardTwo = new TextButton("Reward 2", game.skin);
+        TextButton popScreen = new TextButton("Pop Screen", game.skin);
 
-        stage.addActor(table);
+        Label title = new Label("Victory", game.skin);
+        modal.add(title).padBottom(12);
+        modal.row();
+        modal.add(rewardOne);
+        modal.row();
+        modal.add(rewardTwo);
+        modal.row();
+        modal.add(popScreen);
 
-        resume.addListener(new ClickListener() {
+        Table root = new Table();
+        root.setFillParent(true);
+        root.center();
+        root.add(modal).width(300).pad(20);
+
+        stage.addActor(dimOverlay);
+        stage.addActor(root);
+
+        rewardOne.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                //game.screenStack.pop();
+                //dispose();
+            }
+        });
+
+        rewardTwo.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //game.screenStack.popToRoot();
+                //dispose();
+            }
+        });
+
+        popScreen.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.screenStack.pop();
                 game.screenStack.pop();
                 dispose();
             }
@@ -47,7 +92,9 @@ public class VictoryScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(Color.BLACK);
+        if (backgroundScreen != null) {
+            backgroundScreen.render(delta);
+        }
 
         stage.act(delta);
         stage.draw();
@@ -85,5 +132,6 @@ public class VictoryScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        dimTexture.dispose();
     }
 }

@@ -75,31 +75,48 @@ public class MapScreen implements Screen {
     }
 
     private void openNode(MapNode node) {
-        if (!node.visited) {
-            node.visited = true;
-            switch (node.getNodeType()) {
-                case ENEMY:
-                case ELITE:
-                case BOSS:
-                    game.screenStack.push(new BattleScreen(game, node.getNodeType()));
-                    break;
-                case CAMPFIRE:
-                    game.screenStack.push(new CampfireScreen(game));
-                    break;
-                case ANCIENT:
-                    game.screenStack.push(new AncientScreen(game));
-                    break;
-                case EVENT:
-                    game.screenStack.push(new EventScreen(game));
-                    break;
-                case MERCHANT:
-                    game.screenStack.push(new MerchantScreen(game));
-                    break;
-                case TREASURE:
-                    game.screenStack.push(new TreasureScreen(game));
-                    break;
+        if (!canOpenNode(node)) {
+            return;
+        }
+
+        node.visited = true;
+        switch (node.getNodeType()) {
+            case ENEMY:
+            case ELITE:
+            case BOSS:
+                game.screenStack.push(new BattleScreen(game, node.getNodeType()));
+                break;
+            case CAMPFIRE:
+                game.screenStack.push(new CampfireScreen(game));
+                break;
+            case ANCIENT:
+                game.screenStack.push(new AncientScreen(game));
+                break;
+            case EVENT:
+                game.screenStack.push(new EventScreen(game));
+                break;
+            case MERCHANT:
+                game.screenStack.push(new MerchantScreen(game));
+                break;
+            case TREASURE:
+                game.screenStack.push(new TreasureScreen(game));
+                break;
+        }
+    }
+
+    private boolean canOpenNode(MapNode node) {
+        int nodeIndex = game.level.nodes.indexOf(node);
+        if (nodeIndex < 0 || node.visited) {
+            return false;
+        }
+
+        for (int i = nodeIndex + 1; i < game.level.nodes.size(); i++) {
+            if (!game.level.nodes.get(i).visited) {
+                return false;
             }
         }
+
+        return true;
     }
 
     @Override
@@ -130,5 +147,6 @@ public class MapScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        MapNodeActor.disposeTemplates();
     }
 }

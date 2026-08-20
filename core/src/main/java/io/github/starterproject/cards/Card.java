@@ -11,6 +11,10 @@ public abstract class Card {
     public abstract Rarity getRarity();
     public abstract boolean isUpgraded();
 
+    public boolean requiresTarget() {
+        return getType() == CardType.ATTACK;
+    }
+
     public String getArtworkPath() {
         String name = getName();
         if (name == null || name.trim().isEmpty()) {

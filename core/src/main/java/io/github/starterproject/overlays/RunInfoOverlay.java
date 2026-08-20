@@ -10,8 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import io.github.starterproject.game.TheGameClass;
 
 public class RunInfoOverlay extends Table {
+    private final TheGameClass game;
+    private final Label healthText;
+    private final Label goldText;
+
     public RunInfoOverlay(final TheGameClass game) {
         super(game.skin);
+        this.game = game;
 
         this.top().left();
 
@@ -30,16 +35,23 @@ public class RunInfoOverlay extends Table {
         this.setPosition(0, com.badlogic.gdx.Gdx.graphics.getHeight() - 80);
 
         Image healthPng = new Image(game.assets.get("icons/health.png", Texture.class));
-        Label healthText = new Label(game.player.currentHP + "/" + game.player.maxHP, game.skin);
-        healthText.setFontScale(3f);
+        this.healthText = new Label(game.player.currentHP + "/" + game.player.maxHP, game.skin);
+        this.healthText.setFontScale(3f);
 
         Image goldPng = new Image(game.assets.get("icons/gold.png", Texture.class));
-        Label goldText = new Label(String.valueOf(game.player.gold), game.skin);
-        goldText.setFontScale(3f);
+        this.goldText = new Label(String.valueOf(game.player.gold), game.skin);
+        this.goldText.setFontScale(3f);
 
         this.add(healthPng).width(60).height(60).pad(10);
-        this.add(healthText).width(200).height(60).pad(10);
+        this.add(this.healthText).width(200).height(60).pad(10);
         this.add(goldPng).width(60).height(60).pad(10);
-        this.add(goldText).width(60).height(60).pad(10);
+        this.add(this.goldText).width(60).height(60).pad(10);
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        healthText.setText(game.player.currentHP + "/" + game.player.maxHP);
+        goldText.setText(String.valueOf(game.player.gold));
     }
 }

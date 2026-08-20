@@ -17,6 +17,7 @@ public class CardActor extends Actor {
     private final Card card;
     private final AssetManager assets;
     private final BitmapFont font;
+    private boolean selected;
 
     public CardActor(Card card, Skin skin) {
         this(card, skin, null);
@@ -27,6 +28,18 @@ public class CardActor extends Actor {
         this.assets = assets;
         this.font = skin.get(Label.LabelStyle.class).font;
         setSize(100, 200);
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isSelected() {
+        return selected;
     }
 
     @Override
@@ -65,6 +78,9 @@ public class CardActor extends Actor {
         drawRect(batch, x + padding, nameY, width - padding * 2f, nameHeight, Color.valueOf("F4E7C5"));
         drawRect(batch, x + padding, artBottom, width - padding * 2f, artTop - artBottom, artSlotColor);
         drawBorder(batch, x + padding, artBottom, width - padding * 2f, artTop - artBottom, Color.valueOf("0B0B0B"), 2f);
+        if (selected) {
+            drawBorder(batch, x + 1f, y + 1f, width - 2f, height - 2f, Color.valueOf("F4D35E"), 4f);
+        }
 
         Texture artwork = resolveArtworkTexture();
         if (artwork != null) {
