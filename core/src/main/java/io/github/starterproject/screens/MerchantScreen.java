@@ -14,10 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
+import io.github.starterproject.overlays.DebugOverlay;
+import io.github.starterproject.overlays.RunInfoOverlay;
 
 public class MerchantScreen implements Screen {
     private final TheGameClass game;     // member
     private final Stage stage;
+    final DebugOverlay debugOverlay;
+    final RunInfoOverlay runInfoOverlay;
 
     public MerchantScreen(final TheGameClass game) {
         this.game = game;
@@ -29,21 +33,25 @@ public class MerchantScreen implements Screen {
         Image backgroundImage = new Image(game.assets.get("backgrounds/merchant_background.png", Texture.class));
         backgroundImage.setFillParent(true);
 
-        TextButton returnToTitle = new TextButton("Return to Title Screen", game.skin);
+        TextButton continueButton = new TextButton("Continue", game.skin);
 
         table.add(backgroundImage).fill().expand();
         table.row();
-        table.add(returnToTitle).width(200).height(60).pad(10);
+        table.add(continueButton).width(200).height(60).pad(10);
 
         stage.addActor(table);
 
-        returnToTitle.addListener(new ClickListener() {
+        continueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.screenStack.popToRoot();
+                game.screenStack.pop();
                 dispose();
             }
         });
+
+        this.debugOverlay = new DebugOverlay(stage, game.skin);
+        this.runInfoOverlay = new RunInfoOverlay(game);
+        stage.addActor(runInfoOverlay);
     }
 
     @Override
@@ -54,7 +62,7 @@ public class MerchantScreen implements Screen {
         stage.draw();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.screenStack.pop();
+            game.screenStack.push(new SettingsScreen(game));
         }
     }
 

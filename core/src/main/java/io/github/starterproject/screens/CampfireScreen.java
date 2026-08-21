@@ -5,11 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
@@ -26,19 +27,27 @@ public class CampfireScreen implements Screen {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
-        Image campfire = new Image(game.assets.get("backgrounds/campfire_background.png", Texture.class));
-        campfire.setFillParent(true);
-//        ImageButton rest = new ImageButton(game.skin);
-//        ImageButton upgrade = new ImageButton(game.skin);
-
         Table table = new Table();
         table.setFillParent(true);
-        table.center().align(Align.center);
-        table.add(campfire);
-//        table.add(rest);
-//        table.add(upgrade);
+
+        Image campfire = new Image(game.assets.get("backgrounds/campfire_background.png", Texture.class));
+        campfire.setFillParent(true);
+
+        TextButton continueButton = new TextButton("Continue", game.skin);
+
+        table.add(campfire).fill().expand();
+        table.row();
+        table.add(continueButton).width(200).height(60).pad(10);
 
         stage.addActor(table);
+
+        continueButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.screenStack.pop();
+                dispose();
+            }
+        });
 
         this.debugOverlay = new DebugOverlay(stage, game.skin);
         this.runInfoOverlay = new RunInfoOverlay(game);
