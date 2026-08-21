@@ -3,6 +3,8 @@ package io.github.starterproject.cards;
 import java.util.Locale;
 
 public abstract class Card {
+    public int WIDTH = 150;
+    public int HEIGHT = 300;
 
     public abstract int getCost();
     public abstract String getName();

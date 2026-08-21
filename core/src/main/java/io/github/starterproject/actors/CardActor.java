@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import io.github.starterproject.Constants;
 import io.github.starterproject.cards.Card;
 import io.github.starterproject.cards.CardType;
 import io.github.starterproject.cards.Rarity;
@@ -33,7 +34,7 @@ public class CardActor extends Actor {
         this.card = card;
         this.assets = assets;
         this.font = skin.get(Label.LabelStyle.class).font;
-        setSize(150, 300);
+        setSize(Constants.CARD_WIDTH, Constants.CARD_HEIGHT);
     }
 
     public Card getCard() {

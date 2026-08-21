@@ -153,7 +153,7 @@ public class BattleScreen implements Screen {
 
         stage.act(delta);
         layoutBattlefield();
-        debugOverlay.update("GameScreen");
+        debugOverlay.update("Battle Screen");
         stage.draw();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {

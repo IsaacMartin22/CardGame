@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import io.github.starterproject.Constants;
 import io.github.starterproject.cards.Card;
 
 import java.util.List;
@@ -21,12 +22,9 @@ public class HandActor extends Group {
         boolean isTargetHit(float stageX, float stageY);
     }
 
-    private static final float CARD_WIDTH = 150f;
-    private static final float CARD_HEIGHT = 300f;
     private static final float BASE_Y = 10f;
     private static final float SELECTED_RAISE = 28f;
     private static final float CENTER_RAISE = 8f;
-    private static final float VERTICAL_FAN_SPREAD = 18f;
     private static final float MAX_ROTATION = 6f;
 
     private final Skin skin;
@@ -69,8 +67,6 @@ public class HandActor extends Group {
             final CardActor cardActor = new CardActor(cards.get(i), skin, assets);
             cardActor.setTouchable(Touchable.enabled);
             cardActor.addListener(new InputListener() {
-                private float lastX;
-                private float lastY;
                 private float pressStageY;
                 private boolean dragged;
                 private boolean selectedBeforePress;
@@ -86,8 +82,6 @@ public class HandActor extends Group {
                     draggingCardActor = cardActor;
                     draggingCardReadyToPlay = false;
                     dragged = false;
-                    lastX = x;
-                    lastY = y;
                     pressStageY = event.getStageY();
                     return true;
                 }
@@ -189,7 +183,7 @@ public class HandActor extends Group {
         boolean compressHand = draggingCardReadyToPlay && draggingCardActor != null;
         int visibleCardCount = compressHand ? cardCount - 1 : cardCount;
         float middleIndex = (visibleCardCount - 1) / 2f;
-        float spread = visibleCardCount == 1 ? 0f : Math.min(60f, Math.max(36f, (zoneWidth - CARD_WIDTH) * 0.18f / middleIndex));
+        float spread = visibleCardCount == 1 ? 0f : Math.min(60f, Math.max(36f, (zoneWidth - Constants.CARD_WIDTH) * 0.18f / middleIndex));
         float rotation = compressHand ? 2f : MAX_ROTATION;
 
         for (int i = 0; i < cardCount; i++) {
@@ -201,16 +195,16 @@ public class HandActor extends Group {
             float layoutIndex = compressHand ? (i > selectedHandIndex ? i - 1 : i) : i;
             float offset = layoutIndex - middleIndex;
             float normalizedOffset = middleIndex == 0f ? 0f : offset / middleIndex;
-            float x = zoneWidth / 2f + offset * spread - CARD_WIDTH / 2f;
+            float x = zoneWidth / 2f + offset * spread - Constants.CARD_WIDTH / 2f;
             float y = BASE_Y + (1f - Math.abs(normalizedOffset)) * CENTER_RAISE;
 
             if (cardActor == selectedCardActor) {
                 y += SELECTED_RAISE;
             }
 
-            cardActor.setOrigin(CARD_WIDTH / 2f, 0f);
+            cardActor.setOrigin(Constants.CARD_WIDTH / 2f, 0f);
             cardActor.setPosition(x, y);
-            cardActor.setSize(CARD_WIDTH, CARD_HEIGHT);
+            cardActor.setSize(Constants.CARD_WIDTH, Constants.CARD_HEIGHT);
             cardActor.setRotation(-normalizedOffset * rotation);
             cardActor.setSelected(cardActor == selectedCardActor);
         }

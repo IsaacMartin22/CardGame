@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import io.github.starterproject.Constants;
 import io.github.starterproject.game.TheGameClass;
 import io.github.starterproject.actors.CardActor;
 import io.github.starterproject.overlays.DebugOverlay;
@@ -27,19 +28,24 @@ public class DeckScreen implements Screen {
         table.setFillParent(true);
         table.top().left();
 
+
+
+        this.debugOverlay = new DebugOverlay(stage, game.skin);
+        this.runInfoOverlay = new RunInfoOverlay(game);
+
+        table.padTop(80f);
         for (int i = 0; i < game.deck.getCards().size(); i++) {
-            table.add(new CardActor(game.deck.getCards().get(i), game.skin, game.assets)).width(100).height(200).pad(10);
+            table.add(new CardActor(game.deck.getCards().get(i), game.skin, game.assets)).width(Constants.CARD_WIDTH).height(Constants.CARD_HEIGHT).pad(10);
             if (i != 0 && i % 5 == 0) {
                 table.row();
             }
         }
 
-        this.debugOverlay = new DebugOverlay(stage, game.skin);
-        this.runInfoOverlay = new RunInfoOverlay(game);
+        stage.addActor(runInfoOverlay);
 
         stage.addActor(table);
 
-        stage.addActor(runInfoOverlay);
+
     }
 
     @Override
@@ -47,7 +53,7 @@ public class DeckScreen implements Screen {
         ScreenUtils.clear(Color.BROWN);
 
         stage.act(delta);
-        //debugOverlay.update("GameScreen");
+        debugOverlay.update("Deck Screen");
         stage.draw();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.D)) {

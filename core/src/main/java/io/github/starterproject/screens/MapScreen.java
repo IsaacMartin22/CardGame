@@ -61,13 +61,12 @@ public class MapScreen implements Screen {
         ScreenUtils.clear(Color.GOLDENROD);
 
         stage.act(delta);
+        debugOverlay.update("Map Screen");
         stage.draw();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.screenStack.push(new SettingsScreen(game));
         }
-
-
 
         if (!locked) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {

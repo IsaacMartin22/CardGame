@@ -60,7 +60,7 @@ public class CampfireScreen implements Screen {
         ScreenUtils.clear(Color.CYAN);
 
         stage.act(delta);
-        debugOverlay.update("CampfireScreen");
+        debugOverlay.update("Campfire Screen");
         stage.draw();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.D)) {
