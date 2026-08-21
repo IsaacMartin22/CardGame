@@ -133,6 +133,7 @@ public class Battle {
 
     public void endEnemyTurn() {
         turn = Turn.PLAYER;
+        game.player.currentBlock = 0;
         drawCards(Hand.HAND_LIMIT);
     }
 
@@ -172,6 +173,10 @@ public class Battle {
 
     public int getPlayerHealth() {
         return game.player.currentHP;
+    }
+
+    public int getPlayerBlock() {
+        return game.player.currentBlock;
     }
 
     public enum BattleResult {

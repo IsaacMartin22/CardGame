@@ -33,6 +33,7 @@ public class BattleScreen implements Screen {
     final RunInfoOverlay runInfoOverlay;
     final Battle battle;
     public Label playerHealthLabel;
+    public Label playerBlockLabel;
     public Label enemyHealthLabel;
 
     private Stage stage;
@@ -89,6 +90,9 @@ public class BattleScreen implements Screen {
         playerHealthLabel = new Label("Player Health: " + battle.getPlayerHealth(), game.skin);
         healthBars.add(playerHealthLabel).width(300).height(100).pad(100);
 
+        playerBlockLabel = new Label("Block: " + battle.getPlayerHealth(), game.skin);
+        healthBars.add(playerBlockLabel).width(300).height(100).pad(100);
+
         enemyHealthLabel = new Label("Enemy Health: " + battle.getEnemyHealth(), game.skin);
         healthBars.add(enemyHealthLabel).width(300).height(100).pad(100);
 
@@ -144,6 +148,7 @@ public class BattleScreen implements Screen {
         ScreenUtils.clear(Color.BLACK);
 
         playerHealthLabel.setText("Player Health: " + battle.getPlayerHealth());
+        playerBlockLabel.setText("Block: " + battle.getPlayerBlock());
         enemyHealthLabel.setText("Enemy Health: " + battle.getEnemyHealth());
         if (handDirty) {
             refreshHandView();
