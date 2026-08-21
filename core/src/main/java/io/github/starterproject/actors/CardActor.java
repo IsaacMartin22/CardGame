@@ -1,4 +1,4 @@
-package io.github.starterproject.cards;
+package io.github.starterproject.actors;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
@@ -7,12 +7,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import io.github.starterproject.cards.Card;
+import io.github.starterproject.cards.CardType;
+import io.github.starterproject.cards.Rarity;
 
 public class CardActor extends Actor {
     private static Texture whitePixel;
+    private static final Vector3 Z_AXIS = new Vector3(0f, 0f, 1f);
 
     private final Card card;
     private final AssetManager assets;
@@ -27,7 +33,7 @@ public class CardActor extends Actor {
         this.card = card;
         this.assets = assets;
         this.font = skin.get(Label.LabelStyle.class).font;
-        setSize(100, 200);
+        setSize(150, 300);
     }
 
     public Card getCard() {
@@ -50,8 +56,29 @@ public class CardActor extends Actor {
         float y = getY();
         float width = getWidth();
         float height = getHeight();
+        float rotation = getRotation();
+        float scaleX = getScaleX();
+        float scaleY = getScaleY();
 
         Color previousColor = batch.getColor().cpy();
+        Matrix4 previousTransform = null;
+        boolean transformed = rotation != 0f || scaleX != 1f || scaleY != 1f;
+
+        if (transformed) {
+            previousTransform = batch.getTransformMatrix().cpy();
+            batch.flush();
+
+            Matrix4 transform = batch.getTransformMatrix();
+            transform.translate(x + getOriginX(), y + getOriginY(), 0f);
+            transform.rotate(Z_AXIS, rotation);
+            transform.scale(scaleX, scaleY, 1f);
+            transform.translate(-getOriginX(), -getOriginY(), 0f);
+            batch.setTransformMatrix(transform);
+
+            x = 0f;
+            y = 0f;
+        }
+
         batch.setColor(Color.WHITE);
 
         Color rarityColor = getRarityColor(card.getRarity());
@@ -98,6 +125,11 @@ public class CardActor extends Actor {
         drawCenteredText(batch, font, card.getType().name(), typeBadgeX, bannerY, typeBadgeWidth, ribbonHeight, Color.WHITE);
         drawCenteredText(batch, font, card.getName(), x + padding, nameY, width - padding * 2f, nameHeight, Color.BLACK);
         drawCenteredText(batch, font, card.getDescription(), x + padding + 2f, y + padding + nameHeight + 2f, width - padding * 2f - 4f, Math.max(24f, artBottom - (y + padding + nameHeight + 4f)), Color.BLACK);
+
+        if (transformed) {
+            batch.flush();
+            batch.setTransformMatrix(previousTransform);
+        }
 
         batch.setColor(previousColor);
     }

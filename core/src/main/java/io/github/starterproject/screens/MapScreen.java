@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
 import io.github.starterproject.map.MapNode;
-import io.github.starterproject.map.MapNodeActor;
+import io.github.starterproject.actors.MapNodeActor;
 import io.github.starterproject.overlays.DebugOverlay;
 import io.github.starterproject.overlays.RunInfoOverlay;
 
