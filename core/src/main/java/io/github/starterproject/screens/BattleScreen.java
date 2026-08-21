@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import io.github.starterproject.actions.ScreenShakeAction;
 import io.github.starterproject.actors.HandActor;
 import io.github.starterproject.game.Battle;
 import io.github.starterproject.game.BattleEnemy;
@@ -37,7 +38,6 @@ public class BattleScreen implements Screen {
     private Stage stage;
     private HandActor handActor;
     private Image enemyImage;
-    private boolean handDirty = true;
     private Music music;
 
     public BattleScreen(final TheGameClass game, MapNodeType type) {
@@ -45,7 +45,7 @@ public class BattleScreen implements Screen {
         this.stage = new Stage(new ScreenViewport());
         this.battle = new Battle(game, new BattleEnemy());
         this.battle.initializePiles(game.deck);
-        this.battle.drawCards(Hand.HAND_LIMIT);
+        int initialDrawCount = this.battle.drawCards(Hand.HAND_LIMIT);
 
         String backgroundFilename = "backgrounds/oasis.jpg";
         switch (type) {
@@ -106,6 +106,7 @@ public class BattleScreen implements Screen {
         handActor.setPlayRequestHandler(this::playSelectedCard);
         handActor.setTargetHitTester(this::isPointerOverEnemy);
         rootTable.add(handActor).expandX().fillX().height(220f).bottom().center().padBottom(2f);
+        refreshHandView(initialDrawCount);
 
         // background should be behind the UI table
         stage.addActor(backgroundImage);
@@ -119,18 +120,24 @@ public class BattleScreen implements Screen {
         endTurn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                battle.endPlayerTurn();
-                handDirty = true;
+                int damageTaken = battle.endPlayerTurn();
+                if (damageTaken > 0) {
+                    shakeScreen();
+                }
                 if (battle.getBattleResult() == Battle.BattleResult.DEFEAT) {
                     game.screenStack.push(new DeathScreen(game));
+                    return;
                 }
-                else if (battle.getBattleResult() == Battle.BattleResult.VICTORY) {
+                if (battle.getBattleResult() == Battle.BattleResult.VICTORY) {
                     game.screenStack.push(new VictoryScreen(game));
+                    return;
                 }
+
+                int drawnCards = battle.endEnemyTurn();
+                refreshHandView(drawnCards);
             }
         });
 
-        refreshHandView();
         layoutBattlefield();
     }
 
@@ -147,10 +154,6 @@ public class BattleScreen implements Screen {
         playerHealthLabel.setText("Player Health: " + battle.getPlayerHealth());
         playerBlockLabel.setText("Block: " + battle.getPlayerBlock());
         enemyHealthLabel.setText("Enemy Health: " + battle.getEnemyHealth());
-        if (handDirty) {
-            refreshHandView();
-        }
-
         stage.act(delta);
         layoutBattlefield();
         debugOverlay.update("Battle Screen");
@@ -191,11 +194,6 @@ public class BattleScreen implements Screen {
         stage.dispose();
     }
 
-    private void refreshHandView() {
-        handActor.setCards(battle.getHand().getCards());
-        handDirty = false;
-    }
-
     private void layoutBattlefield() {
         float worldWidth = stage.getViewport().getWorldWidth();
         float worldHeight = stage.getViewport().getWorldHeight();
@@ -216,8 +214,7 @@ public class BattleScreen implements Screen {
             return false;
         }
 
-        handDirty = true;
-        refreshHandView();
+        refreshHandView(0);
 
         if (battle.getBattleResult() == Battle.BattleResult.DEFEAT) {
             game.screenStack.push(new DeathScreen(game));
@@ -231,5 +228,14 @@ public class BattleScreen implements Screen {
 
     private boolean isPointerOverEnemy(float stageX, float stageY) {
         return enemyImage.hit(stageX, stageY, true) != null;
+    }
+
+    private void shakeScreen() {
+        stage.getRoot().clearActions();
+        stage.getRoot().addAction(new ScreenShakeAction(0.35f, 14f));
+    }
+
+    private void refreshHandView(int animatedCards) {
+        handActor.setCards(battle.getHand().getCards(), animatedCards);
     }
 }

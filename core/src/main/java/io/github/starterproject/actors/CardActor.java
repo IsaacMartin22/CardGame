@@ -25,6 +25,7 @@ public class CardActor extends Actor {
     private final AssetManager assets;
     private final BitmapFont font;
     private boolean selected;
+    private boolean drawAnimationActive;
 
     public CardActor(Card card, Skin skin) {
         this(card, skin, null);
@@ -47,6 +48,14 @@ public class CardActor extends Actor {
 
     public boolean isSelected() {
         return selected;
+    }
+
+    public void setDrawAnimationActive(boolean drawAnimationActive) {
+        this.drawAnimationActive = drawAnimationActive;
+    }
+
+    public boolean isDrawAnimationActive() {
+        return drawAnimationActive;
     }
 
     @Override

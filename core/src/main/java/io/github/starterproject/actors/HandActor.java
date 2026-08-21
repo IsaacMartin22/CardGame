@@ -1,5 +1,6 @@
 package io.github.starterproject.actors;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import io.github.starterproject.Constants;
+import io.github.starterproject.actions.CardDrawAction;
 import io.github.starterproject.cards.Card;
 
 import java.util.List;
@@ -26,6 +28,8 @@ public class HandActor extends Group {
     private static final float SELECTED_RAISE = 28f;
     private static final float CENTER_RAISE = 8f;
     private static final float MAX_ROTATION = 6f;
+    private static final float DRAW_START_OFFSET_Y = 120f;
+    private static final float DRAW_DURATION = 0.45f;
 
     private final Skin skin;
     private final AssetManager assets;
@@ -52,6 +56,10 @@ public class HandActor extends Group {
     }
 
     public void setCards(List<Card> cards) {
+        setCards(cards, 0);
+    }
+
+    public void setCards(List<Card> cards, int animatedCardCount) {
         clearChildren();
         selectedCardActor = null;
         draggingCardActor = null;
@@ -62,10 +70,12 @@ public class HandActor extends Group {
             return;
         }
 
+        int animationStartIndex = Math.max(0, cards.size() - Math.max(0, animatedCardCount));
         for (int i = 0; i < cards.size(); i++) {
             final int handIndex = i;
             final CardActor cardActor = new CardActor(cards.get(i), skin, assets);
             cardActor.setTouchable(Touchable.enabled);
+            cardActor.setOrigin(Constants.CARD_WIDTH / 2f, 0f);
             cardActor.addListener(new InputListener() {
                 private float pressStageY;
                 private boolean dragged;
@@ -146,6 +156,24 @@ public class HandActor extends Group {
                     layoutHandCards();
                 }
             });
+
+            if (i >= animationStartIndex) {
+                float zoneWidth = getWidth() > 0f ? getWidth() : Gdx.graphics.getWidth();
+                float visibleCardCount = cards.size();
+                float middleIndex = (visibleCardCount - 1f) / 2f;
+                float spread = visibleCardCount == 1f ? 0f : Math.min(60f, Math.max(36f, (zoneWidth - Constants.CARD_WIDTH) * 0.18f / middleIndex));
+                float layoutIndex = i;
+                float offset = layoutIndex - middleIndex;
+                float normalizedOffset = middleIndex == 0f ? 0f : offset / middleIndex;
+                float targetX = zoneWidth / 2f + offset * spread - Constants.CARD_WIDTH / 2f;
+                float targetY = BASE_Y + (1f - Math.abs(normalizedOffset)) * CENTER_RAISE;
+                float startX = zoneWidth / 2f - Constants.CARD_WIDTH / 2f;
+                float startY = BASE_Y - DRAW_START_OFFSET_Y;
+
+                cardActor.setDrawAnimationActive(true);
+                cardActor.addAction(new CardDrawAction(startX, startY, targetX, targetY, DRAW_DURATION));
+            }
+
             addActor(cardActor);
         }
 
@@ -188,7 +216,7 @@ public class HandActor extends Group {
 
         for (int i = 0; i < cardCount; i++) {
             CardActor cardActor = (CardActor) getChildren().get(i);
-            if (cardActor == draggingCardActor) {
+            if (cardActor == draggingCardActor || cardActor.isDrawAnimationActive()) {
                 continue;
             }
 

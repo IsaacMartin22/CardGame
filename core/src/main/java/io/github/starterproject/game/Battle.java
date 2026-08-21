@@ -118,7 +118,7 @@ public class Battle {
         }
     }
 
-    public void endPlayerTurn() {
+    public int endPlayerTurn() {
         discardHand();
         turn = Turn.ENEMY;
 
@@ -128,13 +128,13 @@ public class Battle {
         incomingDamage -= blocked;
         game.player.currentHP -= incomingDamage;
         game.player.currentBlock = 0;
-        endEnemyTurn();
+        return incomingDamage;
     }
 
-    public void endEnemyTurn() {
+    public int endEnemyTurn() {
         turn = Turn.PLAYER;
         game.player.currentBlock = 0;
-        drawCards(Hand.HAND_LIMIT);
+        return drawCards(Hand.HAND_LIMIT);
     }
 
     public Turn getTurn() {
