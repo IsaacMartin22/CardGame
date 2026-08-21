@@ -43,9 +43,9 @@ public class VictoryScreen implements Screen {
         modal.setBackground("default-round");
         modal.defaults().width(220).height(60).pad(8);
 
-        TextButton rewardOne = new TextButton("Reward 1", game.skin);
-        TextButton rewardTwo = new TextButton("Reward 2", game.skin);
-        TextButton popScreen = new TextButton("Pop Screen", game.skin);
+        TextButton rewardOne = new TextButton("Gold", game.skin);
+        TextButton rewardTwo = new TextButton("Card Selection", game.skin);
+        TextButton continueButton = new TextButton("Continue", game.skin);
 
         Label title = new Label("Victory", game.skin);
         modal.add(title).padBottom(12);
@@ -54,7 +54,7 @@ public class VictoryScreen implements Screen {
         modal.row();
         modal.add(rewardTwo);
         modal.row();
-        modal.add(popScreen);
+        modal.add(continueButton);
 
         Table root = new Table();
         root.setFillParent(true);
@@ -67,22 +67,29 @@ public class VictoryScreen implements Screen {
         rewardOne.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //game.screenStack.pop();
-                //dispose();
+                if (!rewardOne.isDisabled()) {
+                    game.player.gold += 5;
+                }
+                rewardOne.setDisabled(true);
+                rewardOne.setChecked(true);
             }
         });
 
         rewardTwo.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //game.screenStack.popToRoot();
-                //dispose();
+                if (!rewardTwo.isDisabled()) {
+
+                }
+                rewardTwo.setDisabled(true);
+                rewardTwo.setChecked(true);
             }
         });
 
-        popScreen.addListener(new ClickListener() {
+        continueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // Pop the rewards screen and immediately pop the battle screen to go back to the map
                 game.screenStack.pop();
                 game.screenStack.pop();
                 dispose();
@@ -100,7 +107,7 @@ public class VictoryScreen implements Screen {
         stage.draw();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.screenStack.pop();
+            game.screenStack.push(new SettingsScreen(game));
         }
     }
 

@@ -10,10 +10,14 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
 import io.github.starterproject.cards.CardActor;
+import io.github.starterproject.overlays.DebugOverlay;
+import io.github.starterproject.overlays.RunInfoOverlay;
 
 public class DeckScreen implements Screen {
     private final TheGameClass game;     // member
     private final Stage stage;
+    final DebugOverlay debugOverlay;
+    final RunInfoOverlay runInfoOverlay;
 
     public DeckScreen(final TheGameClass game) {
         this.game = game;
@@ -30,8 +34,12 @@ public class DeckScreen implements Screen {
             }
         }
 
+        this.debugOverlay = new DebugOverlay(stage, game.skin);
+        this.runInfoOverlay = new RunInfoOverlay(game);
+
         stage.addActor(table);
 
+        stage.addActor(runInfoOverlay);
     }
 
     @Override

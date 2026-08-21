@@ -67,6 +67,10 @@ public class MapScreen implements Screen {
             game.screenStack.push(new SettingsScreen(game));
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            game.screenStack.push(new DeckScreen(game));
+        }
+
         if (!locked) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
                 game.screenStack.pop();
