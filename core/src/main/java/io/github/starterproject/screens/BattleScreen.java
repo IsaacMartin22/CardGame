@@ -39,7 +39,6 @@ public class BattleScreen implements Screen {
     private Stage stage;
     private HandActor handActor;
     private Image enemyImage;
-    private Music music;
     private Sound blockGainSound;
     private Sound attackSound;
 
@@ -65,11 +64,9 @@ public class BattleScreen implements Screen {
         Image backgroundImage = new Image(game.assets.get(backgroundFilename, Texture.class));
         backgroundImage.setFillParent(true);
 
-        this.music = game.assets.get("audio/music/ice_music.mp3", Music.class);
-        music.setLooping(true);
-        music.setVolume(.7f);
+
         this.blockGainSound = game.assets.get("audio/sfx/blacksmithhammer.mp3", Sound.class);
-        this.attackSound = game.assets.get("audio/sfx/drop.mp3", Sound.class);
+        this.attackSound = game.assets.get("audio/sfx/crash.ogg", Sound.class);
 
         enemyImage = new Image(game.assets.get("nodes/enemy.png", Texture.class));
         enemyImage.setSize(180f, 180f);
@@ -149,7 +146,6 @@ public class BattleScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        music.play();
     }
 
     @Override
@@ -174,7 +170,6 @@ public class BattleScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.screenStack.push(new SettingsScreen(game));
-            music.pause();
         }
     }
 

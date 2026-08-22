@@ -2,6 +2,7 @@ package io.github.starterproject.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -18,6 +19,7 @@ import io.github.starterproject.game.TheGameClass;
 public class MainMenuScreen implements Screen {
     private final TheGameClass game;
     private final Stage stage;
+    private final Music music;
 
     public MainMenuScreen(final TheGameClass game) {
         this.game = game;
@@ -76,6 +78,10 @@ public class MainMenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
+
+        this.music = game.assets.get("audio/music/ice_music.mp3", Music.class);
+        music.setLooping(true);
+        music.setVolume(.7f);
     }
 
     private void openSettings() {
@@ -98,6 +104,7 @@ public class MainMenuScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        music.play();
     }
 
     @Override
