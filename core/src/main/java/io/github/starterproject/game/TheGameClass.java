@@ -53,6 +53,7 @@ public class TheGameClass extends Game {
         this.assets = new AssetManager();
         loadCards();
         loadSounds();
+        loadMusic();
         loadBackgrounds();
         loadNodes();
         loadIcons();
@@ -81,8 +82,13 @@ public class TheGameClass extends Game {
     }
 
     private void loadSounds() {
+        assets.load("audio/sfx/blacksmithhammer.mp3", Sound.class);
         assets.load("audio/sfx/drop.mp3", Sound.class);
+    }
+
+    private void loadMusic() {
         assets.load("audio/music/music.mp3", Music.class);
+        assets.load("audio/music/ice_music.mp3", Music.class);
     }
 
     private void loadBackgrounds() {

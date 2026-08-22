@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -14,24 +15,27 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
 
-public class DeathScreen implements Screen {
+public class CreditsScreen implements Screen {
     private final TheGameClass game;     // member
     private final Stage stage;
 
-    public DeathScreen(final TheGameClass game) {
+    public CreditsScreen(final TheGameClass game) {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
         Table table = new Table();
         table.setFillParent(true);
 
-        Image backgroundImage = new Image(game.assets.get("backgrounds/death.jpg", com.badlogic.gdx.graphics.Texture.class));
-        backgroundImage.setFillParent(true);
+        Label credits = new Label("Credits", game.skin);
+        String creditsText = "Game developed by Isaac Martin\n";
+        creditsText += "Music: Icy Realm (7 and 8) by The Cynic Project / pixelsphere.org / cynicmusic.com\n";
 
-        TextButton returnToTitle = new TextButton("See Credits", game.skin);
-
-        table.add(backgroundImage).fill().expand();
+        credits.setText(creditsText);
+        table.add(credits).pad(10);
         table.row();
+
+        TextButton returnToTitle = new TextButton("Return to Title Screen", game.skin);
+
         table.add(returnToTitle).width(200).height(60).pad(10);
 
         stage.addActor(table);
@@ -39,7 +43,7 @@ public class DeathScreen implements Screen {
         returnToTitle.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.screenStack.push(new CreditsScreen(game));
+                game.screenStack.popToRoot();
                 game.reset();
                 dispose();
             }

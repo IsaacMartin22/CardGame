@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -39,6 +40,8 @@ public class BattleScreen implements Screen {
     private HandActor handActor;
     private Image enemyImage;
     private Music music;
+    private Sound blockGainSound;
+    private Sound attackSound;
 
     public BattleScreen(final TheGameClass game, MapNodeType type) {
         this.game = game;
@@ -62,9 +65,11 @@ public class BattleScreen implements Screen {
         Image backgroundImage = new Image(game.assets.get(backgroundFilename, Texture.class));
         backgroundImage.setFillParent(true);
 
-        this.music = game.assets.get("audio/music/music.mp3", Music.class);
+        this.music = game.assets.get("audio/music/ice_music.mp3", Music.class);
         music.setLooping(true);
-        music.setVolume(.0f);
+        music.setVolume(.7f);
+        this.blockGainSound = game.assets.get("audio/sfx/blacksmithhammer.mp3", Sound.class);
+        this.attackSound = game.assets.get("audio/sfx/drop.mp3", Sound.class);
 
         enemyImage = new Image(game.assets.get("nodes/enemy.png", Texture.class));
         enemyImage.setSize(180f, 180f);
@@ -208,10 +213,18 @@ public class BattleScreen implements Screen {
             return false;
         }
 
+        int blockBeforePlay = battle.getPlayerBlock();
+        int enemyHealthBeforePlay = battle.getEnemyHealth();
         boolean played = battle.playCardFromHand(selectedHandIndex);
         if (!played) {
             handActor.layoutHandCards();
             return false;
+        }
+        if (battle.getEnemyHealth() < enemyHealthBeforePlay) {
+            attackSound.play();
+        }
+        if (battle.getPlayerBlock() > blockBeforePlay) {
+            blockGainSound.play();
         }
 
         refreshHandView(0);
