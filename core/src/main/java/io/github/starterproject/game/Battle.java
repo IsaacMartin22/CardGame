@@ -74,7 +74,7 @@ public class Battle {
         boolean played = false;
         switch (card.getType()) {
             case ATTACK:
-                enemy.currentHP -= 6;
+                enemy.currentHP -= 30;
                 played = true;
                 break;
             case SKILL:
@@ -171,8 +171,20 @@ public class Battle {
         return enemy.currentHP;
     }
 
+    public int getEnemyMaxHealth() {
+        return enemy.maxHP;
+    }
+
+    public int getEnemyBlock() {
+        return enemy.currentBlock;
+    }
+
     public int getPlayerHealth() {
         return game.player.currentHP;
+    }
+
+    public int getPlayerMaxHealth() {
+        return game.player.maxHP;
     }
 
     public int getPlayerBlock() {

@@ -85,7 +85,7 @@ public class TheGameClass extends Game {
         assets.load("audio/sfx/blacksmithhammer.mp3", Sound.class);
         assets.load("audio/sfx/drop.mp3", Sound.class);
         assets.load("audio/sfx/crash.ogg", Sound.class);
-        assets.load("audio/sfx/explosion.flac", Sound.class);
+        assets.load("audio/sfx/explosion.wav", Sound.class);
     }
 
     private void loadMusic() {
@@ -94,13 +94,6 @@ public class TheGameClass extends Game {
     }
 
     private void loadBackgrounds() {
-        // Jpg
-        assets.load("backgrounds/arctic.jpg", Texture.class);
-        assets.load("backgrounds/nighttime.jpg", Texture.class);
-        assets.load("backgrounds/oasis.jpg", Texture.class);
-
-        assets.load("backgrounds/battle_background.jpg", Texture.class);
-
         assets.load("backgrounds/death.jpg", Texture.class);
 
         // Png
@@ -110,8 +103,16 @@ public class TheGameClass extends Game {
         assets.load("backgrounds/merchant_background.png", Texture.class);
         assets.load("backgrounds/treasure_chest.png", Texture.class);
         assets.load("backgrounds/ancient_background.png", Texture.class);
-        assets.load("backgrounds/boss_background.jpg", Texture.class);
-        assets.load("backgrounds/elite_background.jpg", Texture.class);
+
+        assets.load("backgrounds/autumn_orange_background.png", Texture.class);
+        assets.load("backgrounds/autumn_red_background.png", Texture.class);
+        assets.load("backgrounds/canyon_background.png", Texture.class);
+        assets.load("backgrounds/colliseum_background.png", Texture.class);
+        assets.load("backgrounds/desert_background.png", Texture.class);
+        assets.load("backgrounds/dungeon_background.png", Texture.class);
+        assets.load("backgrounds/forest_background.png", Texture.class);
+        assets.load("backgrounds/plains_background.png", Texture.class);
+        assets.load("backgrounds/snow_background.png", Texture.class);
     }
 
     @Override

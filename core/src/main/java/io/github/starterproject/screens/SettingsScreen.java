@@ -42,6 +42,7 @@ public class SettingsScreen implements Screen {
         modal.defaults().width(220).height(60).pad(8);
 
         TextButton resumeButton = new TextButton("Resume", game.skin);
+        TextButton credits = new TextButton("Credits", game.skin);
         TextButton saveAndQuit = new TextButton("Save and Quit", game.skin);
         TextButton quitButton = new TextButton("Quit", game.skin);
 
@@ -49,6 +50,8 @@ public class SettingsScreen implements Screen {
         modal.add(title).padBottom(12);
         modal.row();
         modal.add(resumeButton);
+        modal.row();
+        modal.add(credits);
         modal.row();
         modal.add(saveAndQuit);
         modal.row();
@@ -67,6 +70,13 @@ public class SettingsScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 game.screenStack.pop();
                 dispose();
+            }
+        });
+
+        credits.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.screenStack.push(new CreditsScreen(game));
             }
         });
 

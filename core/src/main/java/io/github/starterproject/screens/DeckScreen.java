@@ -34,9 +34,10 @@ public class DeckScreen implements Screen {
         this.runInfoOverlay = new RunInfoOverlay(game);
 
         table.padTop(80f);
+        int cardsPerRow = Math.max(1, (int) ((Gdx.graphics.getWidth() - 20f) / (Constants.CARD_WIDTH + 20f)));
         for (int i = 0; i < game.deck.getCards().size(); i++) {
             table.add(new CardActor(game.deck.getCards().get(i), game.skin, game.assets)).width(Constants.CARD_WIDTH).height(Constants.CARD_HEIGHT).pad(10);
-            if (i != 0 && i % 5 == 0) {
+            if ((i + 1) % cardsPerRow == 0 && i < game.deck.getCards().size() - 1) {
                 table.row();
             }
         }

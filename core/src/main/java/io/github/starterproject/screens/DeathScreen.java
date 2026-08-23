@@ -39,7 +39,7 @@ public class DeathScreen implements Screen {
         returnToTitle.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.screenStack.push(new CreditsScreen(game));
+                game.screenStack.popToRoot();
                 game.reset();
                 dispose();
             }

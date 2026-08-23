@@ -3,14 +3,12 @@ package io.github.starterproject.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -18,7 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.actions.ScreenShakeAction;
+import io.github.starterproject.actors.EnemyActor;
 import io.github.starterproject.actors.HandActor;
+import io.github.starterproject.actors.PlayerActor;
 import io.github.starterproject.game.Battle;
 import io.github.starterproject.game.BattleEnemy;
 import io.github.starterproject.game.Hand;
@@ -26,19 +26,31 @@ import io.github.starterproject.game.TheGameClass;
 import io.github.starterproject.map.MapNodeType;
 import io.github.starterproject.overlays.DebugOverlay;
 import io.github.starterproject.overlays.RunInfoOverlay;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class BattleScreen implements Screen {
+    private static final float ATTACK_SOUND_VOLUME = 0.5f;
+    private static final String[] REGULAR_ENEMY_BACKGROUNDS = {
+        "backgrounds/autumn_orange_background.png",
+        "backgrounds/autumn_red_background.png",
+        "backgrounds/canyon_background.png",
+        "backgrounds/colliseum_background.png",
+        "backgrounds/desert_background.png",
+        "backgrounds/dungeon_background.png",
+        "backgrounds/forest_background.png",
+        "backgrounds/plains_background.png",
+        "backgrounds/snow_background.png"
+    };
+
     final TheGameClass game;
     final DebugOverlay debugOverlay;
     final RunInfoOverlay runInfoOverlay;
     final Battle battle;
-    public Label playerHealthLabel;
-    public Label playerBlockLabel;
-    public Label enemyHealthLabel;
 
     private Stage stage;
     private HandActor handActor;
-    private Image enemyImage;
+    private EnemyActor enemyActor;
+    private PlayerActor playerActor;
     private Sound blockGainSound;
     private Sound attackSound;
 
@@ -49,16 +61,17 @@ public class BattleScreen implements Screen {
         this.battle.initializePiles(game.deck);
         int initialDrawCount = this.battle.drawCards(Hand.HAND_LIMIT);
 
-        String backgroundFilename = "backgrounds/oasis.jpg";
+        String backgroundFilename = REGULAR_ENEMY_BACKGROUNDS[0];
         switch (type) {
             case BOSS:
-                backgroundFilename = "backgrounds/boss_background.jpg";
+                backgroundFilename = "backgrounds/colliseum_background.png";
                 break;
             case ELITE:
-                backgroundFilename = "backgrounds/elite_background.jpg";
+                backgroundFilename = "backgrounds/desert_background.png";
                 break;
             case ENEMY:
-                backgroundFilename = "backgrounds/oasis.jpg";
+                backgroundFilename = getRandomEnemyBackground();
+                break;
         }
 
         Image backgroundImage = new Image(game.assets.get(backgroundFilename, Texture.class));
@@ -68,10 +81,9 @@ public class BattleScreen implements Screen {
         this.blockGainSound = game.assets.get("audio/sfx/blacksmithhammer.mp3", Sound.class);
         this.attackSound = game.assets.get("audio/sfx/crash.ogg", Sound.class);
 
-        enemyImage = new Image(game.assets.get("nodes/enemy.png", Texture.class));
-        enemyImage.setSize(180f, 180f);
-        enemyImage.setTouchable(Touchable.enabled);
-        enemyImage.addListener(new ClickListener() {
+        enemyActor = new EnemyActor(game.skin, game.assets.get("nodes/enemy.png", Texture.class));
+        enemyActor.setTouchable(Touchable.enabled);
+        enemyActor.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (handActor.isSelectedCardRequiresTarget()) {
@@ -80,39 +92,31 @@ public class BattleScreen implements Screen {
             }
         });
 
+        playerActor = new PlayerActor(game.skin, game.assets.get("nodes/elite.png", Texture.class));
+
         TextButton endTurn = new TextButton("End Turn", game.skin);
-
-        Table healthBars = new Table();
-        healthBars.top().right();
-
-        playerHealthLabel = new Label("Player Health: " + battle.getPlayerHealth(), game.skin);
-        healthBars.add(playerHealthLabel).width(300).height(100).pad(100);
-
-        playerBlockLabel = new Label("Block: " + battle.getPlayerHealth(), game.skin);
-        healthBars.add(playerBlockLabel).width(300).height(100).pad(100);
-
-        enemyHealthLabel = new Label("Enemy Health: " + battle.getEnemyHealth(), game.skin);
-        healthBars.add(enemyHealthLabel).width(300).height(100).pad(100);
-
-        healthBars.add(endTurn).width(200).height(100).pad(100);
 
         Table rootTable = new Table();
         rootTable.setFillParent(true);
-        rootTable.top();
+        rootTable.add().expand().fill();
         rootTable.row();
-        rootTable.add().expandY().fill();
-        rootTable.row();
-        rootTable.add(healthBars).expandX().top().right();
-        rootTable.row();
+
+        Table bottomBar = new Table();
+        bottomBar.bottom().left();
+
         handActor = new HandActor(game.skin, game.assets);
         handActor.setPlayRequestHandler(this::playSelectedCard);
         handActor.setTargetHitTester(this::isPointerOverEnemy);
-        rootTable.add(handActor).expandX().fillX().height(220f).bottom().center().padBottom(2f);
+        bottomBar.add(handActor).expandX().fillX().height(220f).bottom().center();
+        bottomBar.add(endTurn).width(200).height(100).pad(0f, 32f, 32f, 32f);
+
+        rootTable.add(bottomBar).expandX().fillX().bottom();
         refreshHandView(initialDrawCount);
 
         // background should be behind the UI table
         stage.addActor(backgroundImage);
-        stage.addActor(enemyImage);
+        stage.addActor(enemyActor);
+        stage.addActor(playerActor);
         stage.addActor(rootTable);
 
         this.debugOverlay = new DebugOverlay(stage, game.skin);
@@ -152,9 +156,8 @@ public class BattleScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
 
-        playerHealthLabel.setText("Player Health: " + battle.getPlayerHealth());
-        playerBlockLabel.setText("Block: " + battle.getPlayerBlock());
-        enemyHealthLabel.setText("Enemy Health: " + battle.getEnemyHealth());
+        playerActor.setStats(battle.getPlayerHealth(), battle.getPlayerMaxHealth(), battle.getPlayerBlock());
+        enemyActor.setStats(battle.getEnemyHealth(), battle.getEnemyMaxHealth(), battle.getEnemyBlock());
         stage.act(delta);
         layoutBattlefield();
         debugOverlay.update("Battle Screen");
@@ -197,9 +200,12 @@ public class BattleScreen implements Screen {
     private void layoutBattlefield() {
         float worldWidth = stage.getViewport().getWorldWidth();
         float worldHeight = stage.getViewport().getWorldHeight();
-        float enemyX = (worldWidth - enemyImage.getWidth()) / 2f;
-        float enemyY = worldHeight * 0.52f;
-        enemyImage.setPosition(enemyX, enemyY);
+        float actorY = worldHeight * 0.3f;
+        float enemyX = worldWidth - enemyActor.getWidth() - worldWidth * 0.1f;
+        enemyActor.setPosition(enemyX, actorY);
+
+        float playerX = worldWidth * 0.1f;
+        playerActor.setPosition(playerX, actorY);
     }
 
     private boolean playSelectedCard() {
@@ -216,7 +222,7 @@ public class BattleScreen implements Screen {
             return false;
         }
         if (battle.getEnemyHealth() < enemyHealthBeforePlay) {
-            attackSound.play();
+            attackSound.play(ATTACK_SOUND_VOLUME);
         }
         if (battle.getPlayerBlock() > blockBeforePlay) {
             blockGainSound.play();
@@ -235,7 +241,7 @@ public class BattleScreen implements Screen {
     }
 
     private boolean isPointerOverEnemy(float stageX, float stageY) {
-        return enemyImage.hit(stageX, stageY, true) != null;
+        return enemyActor.hit(stageX - enemyActor.getX(), stageY - enemyActor.getY(), true) != null;
     }
 
     private void shakeScreen() {
@@ -245,5 +251,10 @@ public class BattleScreen implements Screen {
 
     private void refreshHandView(int animatedCards) {
         handActor.setCards(battle.getHand().getCards(), animatedCards);
+    }
+
+    private String getRandomEnemyBackground() {
+        int randomIndex = ThreadLocalRandom.current().nextInt(REGULAR_ENEMY_BACKGROUNDS.length);
+        return REGULAR_ENEMY_BACKGROUNDS[randomIndex];
     }
 }

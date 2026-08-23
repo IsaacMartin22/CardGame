@@ -34,7 +34,7 @@ public class CreditsScreen implements Screen {
         table.add(credits).pad(10);
         table.row();
 
-        TextButton returnToTitle = new TextButton("Return to Title Screen", game.skin);
+        TextButton returnToTitle = new TextButton("Return", game.skin);
 
         table.add(returnToTitle).width(200).height(60).pad(10);
 
@@ -43,8 +43,7 @@ public class CreditsScreen implements Screen {
         returnToTitle.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.screenStack.popToRoot();
-                game.reset();
+                game.screenStack.pop();
                 dispose();
             }
         });
