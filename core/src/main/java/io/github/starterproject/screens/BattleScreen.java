@@ -81,7 +81,7 @@ public class BattleScreen implements Screen {
         this.blockGainSound = game.assets.get("audio/sfx/blacksmithhammer.mp3", Sound.class);
         this.attackSound = game.assets.get("audio/sfx/crash.ogg", Sound.class);
 
-        enemyActor = new EnemyActor(game.skin, game.assets.get("nodes/enemy.png", Texture.class));
+        enemyActor = new EnemyActor(game.skin, game.assets.get("characters/spider.png", Texture.class));
         enemyActor.setTouchable(Touchable.enabled);
         enemyActor.addListener(new ClickListener() {
             @Override
@@ -92,7 +92,7 @@ public class BattleScreen implements Screen {
             }
         });
 
-        playerActor = new PlayerActor(game.skin, game.assets.get("nodes/elite.png", Texture.class));
+        playerActor = new PlayerActor(game.skin, game.assets.get("characters/alien.png", Texture.class));
 
         TextButton endTurn = new TextButton("End Turn", game.skin);
 
@@ -101,16 +101,18 @@ public class BattleScreen implements Screen {
         rootTable.add().expand().fill();
         rootTable.row();
 
-        Table bottomBar = new Table();
-        bottomBar.bottom().left();
-
         handActor = new HandActor(game.skin, game.assets);
         handActor.setPlayRequestHandler(this::playSelectedCard);
         handActor.setTargetHitTester(this::isPointerOverEnemy);
-        bottomBar.add(handActor).expandX().fillX().height(220f).bottom().center();
-        bottomBar.add(endTurn).width(200).height(100).pad(0f, 32f, 32f, 32f);
 
-        rootTable.add(bottomBar).expandX().fillX().bottom();
+        rootTable.row();
+        rootTable.add(handActor).expandX().fillX().height(220f).bottom().center().padBottom(2f);
+
+        Table endTurnTable = new Table();
+        endTurnTable.setFillParent(true);
+        endTurnTable.bottom().right();
+        endTurnTable.add(endTurn).width(200).height(100).pad(0f, 32f, 32f, 32f);
+
         refreshHandView(initialDrawCount);
 
         // background should be behind the UI table
@@ -118,6 +120,7 @@ public class BattleScreen implements Screen {
         stage.addActor(enemyActor);
         stage.addActor(playerActor);
         stage.addActor(rootTable);
+        stage.addActor(endTurnTable);
 
         this.debugOverlay = new DebugOverlay(stage, game.skin);
         this.runInfoOverlay = new RunInfoOverlay(game);

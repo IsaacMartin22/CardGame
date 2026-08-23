@@ -57,6 +57,7 @@ public class TheGameClass extends Game {
         loadBackgrounds();
         loadNodes();
         loadIcons();
+        loadEnemies();
         assets.finishLoading();
     }
 
@@ -64,6 +65,12 @@ public class TheGameClass extends Game {
         assets.load("cards/bone.png", Texture.class);
         assets.load("cards/leather.png", Texture.class);
         assets.load("cards/porkchop.png", Texture.class);
+    }
+
+    private void loadEnemies() {
+        assets.load("characters/spider.png", Texture.class);
+        assets.load("characters/alien.png", Texture.class);
+        assets.load("characters/shark.png", Texture.class);
     }
 
     private void loadNodes() {

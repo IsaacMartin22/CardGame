@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -28,6 +29,7 @@ public class HandActor extends Group {
     private static final float SELECTED_RAISE = 28f;
     private static final float CENTER_RAISE = 8f;
     private static final float MAX_ROTATION = 6f;
+    private static final float HOVER_SCALE = 1.15f;
     private static final float DRAW_START_OFFSET_Y = 120f;
     private static final float DRAW_DURATION = 0.45f;
 
@@ -37,6 +39,7 @@ public class HandActor extends Group {
     private PlayRequestHandler playRequestHandler;
     private TargetHitTester targetHitTester;
     private CardActor selectedCardActor;
+    private CardActor hoveredCardActor;
     private CardActor draggingCardActor;
     private boolean draggingCardReadyToPlay;
     private int selectedHandIndex = -1;
@@ -62,6 +65,7 @@ public class HandActor extends Group {
     public void setCards(List<Card> cards, int animatedCardCount) {
         clearChildren();
         selectedCardActor = null;
+        hoveredCardActor = null;
         draggingCardActor = null;
         draggingCardReadyToPlay = false;
         selectedHandIndex = -1;
@@ -82,6 +86,22 @@ public class HandActor extends Group {
                 private boolean selectedBeforePress;
 
                 @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    if (draggingCardActor != null || cardActor == draggingCardActor) {
+                        return;
+                    }
+
+                    setHoveredCard(cardActor);
+                }
+
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    if (hoveredCardActor == cardActor) {
+                        clearHoveredCard();
+                    }
+                }
+
+                @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     if (pointer != 0) {
                         return false;
@@ -89,6 +109,7 @@ public class HandActor extends Group {
 
                     selectedBeforePress = selectedCardActor == cardActor && selectedHandIndex == handIndex;
                     selectCard(handIndex, cardActor);
+                    setHoveredCard(cardActor);
                     draggingCardActor = cardActor;
                     draggingCardReadyToPlay = false;
                     dragged = false;
@@ -194,6 +215,7 @@ public class HandActor extends Group {
         }
 
         selectedCardActor = null;
+        clearHoveredCard();
         draggingCardActor = null;
         draggingCardReadyToPlay = false;
         selectedHandIndex = -1;
@@ -245,7 +267,14 @@ public class HandActor extends Group {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         layoutHandCards();
+        if (hoveredCardActor != null) {
+            hoveredCardActor.setVisible(false);
+        }
         super.draw(batch, parentAlpha);
+        if (hoveredCardActor != null) {
+            hoveredCardActor.setVisible(true);
+            hoveredCardActor.draw(batch, parentAlpha);
+        }
     }
 
     private void selectCard(int handIndex, CardActor cardActor) {
@@ -256,6 +285,25 @@ public class HandActor extends Group {
         selectedCardActor = cardActor;
         selectedHandIndex = handIndex;
         cardActor.setSelected(true);
+    }
+
+    private void setHoveredCard(CardActor cardActor) {
+        if (hoveredCardActor != null && hoveredCardActor != cardActor) {
+            hoveredCardActor.setScale(1f);
+        }
+
+        hoveredCardActor = cardActor;
+        if (hoveredCardActor != null) {
+            hoveredCardActor.setScale(HOVER_SCALE);
+        }
+    }
+
+    private void clearHoveredCard() {
+        if (hoveredCardActor != null) {
+            hoveredCardActor.setScale(1f);
+        }
+
+        hoveredCardActor = null;
     }
 
     private boolean isDraggedFarEnough(float pressStageY, float releaseStageY) {

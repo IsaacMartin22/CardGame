@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 
 public class PlayerActor extends Group {
-    private static final float IMAGE_SIZE = 180f;
+    private static final float IMAGE_SIZE = 400f;
     private static final float LABEL_HEIGHT = 24f;
     private static final float LABEL_SPACING = 4f;
     private static final float PADDING = 6f;
