@@ -81,6 +81,7 @@ public class MainMenuScreen implements Screen {
 
         this.music = game.assets.get("audio/music/ice_music.mp3", Music.class);
         music.setLooping(true);
+        //music.setVolume(0f);
         music.setVolume(.7f);
     }
 

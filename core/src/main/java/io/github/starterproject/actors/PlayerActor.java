@@ -23,6 +23,8 @@ public class PlayerActor extends Group {
         this.blockLabel = new Label("", skin);
 
         textureImage.setSize(IMAGE_SIZE, IMAGE_SIZE);
+        textureImage.setOrigin(IMAGE_SIZE / 2f, IMAGE_SIZE / 2f);
+        textureImage.setScale(-1, 1);
         healthLabel.setAlignment(Align.center);
         blockLabel.setAlignment(Align.center);
 

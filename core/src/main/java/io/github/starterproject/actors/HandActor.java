@@ -209,6 +209,23 @@ public class HandActor extends Group {
         return selectedCardActor != null && selectedCardActor.getCard().requiresTarget();
     }
 
+    public Card getSelectedCard() {
+        if (selectedCardActor == null) {
+            return null;
+        }
+        return selectedCardActor.getCard();
+    }
+
+    public boolean getSelectedCardStageCenter(Vector2 out) {
+        if (selectedCardActor == null || out == null) {
+            return false;
+        }
+
+        out.set(selectedCardActor.getWidth() / 2f, selectedCardActor.getHeight() / 2f);
+        selectedCardActor.localToStageCoordinates(out);
+        return true;
+    }
+
     public void clearSelection() {
         if (selectedCardActor != null) {
             selectedCardActor.setSelected(false);

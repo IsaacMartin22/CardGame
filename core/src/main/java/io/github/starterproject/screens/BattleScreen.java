@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -15,10 +17,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import io.github.starterproject.actions.CardFlickAction;
 import io.github.starterproject.actions.ScreenShakeAction;
+import io.github.starterproject.actors.CardActor;
 import io.github.starterproject.actors.EnemyActor;
 import io.github.starterproject.actors.HandActor;
 import io.github.starterproject.actors.PlayerActor;
+import io.github.starterproject.cards.Card;
+import io.github.starterproject.cards.CardType;
+import io.github.starterproject.cards.Defend;
 import io.github.starterproject.game.Battle;
 import io.github.starterproject.game.BattleEnemy;
 import io.github.starterproject.game.Hand;
@@ -30,6 +37,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class BattleScreen implements Screen {
     private static final float ATTACK_SOUND_VOLUME = 0.5f;
+    private static final float PLAYED_CARD_FLICK_DURATION = 0.2f;
     private static final String[] REGULAR_ENEMY_BACKGROUNDS = {
         "backgrounds/autumn_orange_background.png",
         "backgrounds/autumn_red_background.png",
@@ -92,7 +100,7 @@ public class BattleScreen implements Screen {
             }
         });
 
-        playerActor = new PlayerActor(game.skin, game.assets.get("characters/alien.png", Texture.class));
+        playerActor = new PlayerActor(game.skin, game.assets.get("characters/shark.png", Texture.class));
 
         TextButton endTurn = new TextButton("End Turn", game.skin);
 
@@ -216,6 +224,9 @@ public class BattleScreen implements Screen {
         if (selectedHandIndex < 0) {
             return false;
         }
+        Card selectedCard = handActor.getSelectedCard();
+        Vector2 selectedCardCenter = new Vector2();
+        boolean hasSelectedCardCenter = handActor.getSelectedCardStageCenter(selectedCardCenter);
 
         int blockBeforePlay = battle.getPlayerBlock();
         int enemyHealthBeforePlay = battle.getEnemyHealth();
@@ -224,27 +235,92 @@ public class BattleScreen implements Screen {
             handActor.layoutHandCards();
             return false;
         }
-        if (battle.getEnemyHealth() < enemyHealthBeforePlay) {
-            attackSound.play(ATTACK_SOUND_VOLUME);
+        boolean shouldPlayAttackSound = battle.getEnemyHealth() < enemyHealthBeforePlay;
+        boolean shouldPlayBlockSound = battle.getPlayerBlock() > blockBeforePlay;
+        Battle.BattleResult battleResult = battle.getBattleResult();
+        if (selectedCard != null && hasSelectedCardCenter) {
+            boolean startedFlickAnimation = playCardFlickAnimation(
+                selectedCard,
+                selectedCardCenter.x,
+                selectedCardCenter.y,
+                () -> finalizePlayedCard(shouldPlayAttackSound, shouldPlayBlockSound, battleResult)
+            );
+            if (!startedFlickAnimation) {
+                finalizePlayedCard(shouldPlayAttackSound, shouldPlayBlockSound, battleResult);
+            }
         }
-        if (battle.getPlayerBlock() > blockBeforePlay) {
-            blockGainSound.play();
+        else {
+            finalizePlayedCard(shouldPlayAttackSound, shouldPlayBlockSound, battleResult);
         }
 
         refreshHandView(0);
-
-        if (battle.getBattleResult() == Battle.BattleResult.DEFEAT) {
-            game.screenStack.push(new DeathScreen(game));
-        }
-        else if (battle.getBattleResult() == Battle.BattleResult.VICTORY) {
-            game.screenStack.push(new VictoryScreen(game));
-        }
 
         return true;
     }
 
     private boolean isPointerOverEnemy(float stageX, float stageY) {
         return enemyActor.hit(stageX - enemyActor.getX(), stageY - enemyActor.getY(), true) != null;
+    }
+
+    private boolean playCardFlickAnimation(Card card, float startStageX, float startStageY, Runnable onComplete) {
+        CardFlickAction.Target flickTarget = getFlickTarget(card);
+        if (flickTarget == null) {
+            return false;
+        }
+
+        Vector2 targetCenter = getFlickTargetCenter(flickTarget);
+        CardActor flyCard = new CardActor(card, game.skin, game.assets);
+        flyCard.setTouchable(Touchable.disabled);
+        flyCard.setOrigin(flyCard.getWidth() / 2f, flyCard.getHeight() / 2f);
+        flyCard.setPosition(startStageX - flyCard.getWidth() / 2f, startStageY - flyCard.getHeight() / 2f);
+        stage.addActor(flyCard);
+        flyCard.addAction(new CardFlickAction(
+            flyCard.getX(),
+            flyCard.getY(),
+            targetCenter.x - flyCard.getWidth() / 2f,
+            targetCenter.y - flyCard.getHeight() / 2f,
+            PLAYED_CARD_FLICK_DURATION,
+            flickTarget,
+            onComplete
+        ));
+        return true;
+    }
+
+    private void finalizePlayedCard(boolean shouldPlayAttackSound, boolean shouldPlayBlockSound, Battle.BattleResult battleResult) {
+        if (shouldPlayAttackSound) {
+            attackSound.play(ATTACK_SOUND_VOLUME);
+        }
+        if (shouldPlayBlockSound) {
+            blockGainSound.play();
+        }
+
+        if (battleResult == Battle.BattleResult.DEFEAT) {
+            game.screenStack.push(new DeathScreen(game));
+        }
+        else if (battleResult == Battle.BattleResult.VICTORY) {
+            game.screenStack.push(new VictoryScreen(game));
+        }
+    }
+
+    private CardFlickAction.Target getFlickTarget(Card card) {
+        if (card.getType() == CardType.ATTACK) {
+            return CardFlickAction.Target.ENEMY;
+        }
+        if (card instanceof Defend) {
+            return CardFlickAction.Target.PLAYER;
+        }
+        return null;
+    }
+
+    private Vector2 getFlickTargetCenter(CardFlickAction.Target target) {
+        if (target == CardFlickAction.Target.ENEMY) {
+            return getActorCenter(enemyActor);
+        }
+        return getActorCenter(playerActor);
+    }
+
+    private Vector2 getActorCenter(Actor actor) {
+        return new Vector2(actor.getX() + actor.getWidth() / 2f, actor.getY() + actor.getHeight() / 2f);
     }
 
     private void shakeScreen() {

@@ -28,7 +28,7 @@ public class DeathScreen implements Screen {
         Image backgroundImage = new Image(game.assets.get("backgrounds/death.jpg", com.badlogic.gdx.graphics.Texture.class));
         backgroundImage.setFillParent(true);
 
-        TextButton returnToTitle = new TextButton("See Credits", game.skin);
+        TextButton returnToTitle = new TextButton("Return to Title", game.skin);
 
         table.add(backgroundImage).fill().expand();
         table.row();

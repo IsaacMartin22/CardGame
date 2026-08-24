@@ -19,6 +19,7 @@ public class Battle {
 
     public Battle(TheGameClass game, BattleEnemy enemy) {
         this.game = game;
+        game.player.currentBlock = 0;
         this.enemy = enemy;
         this.hand = new Hand();
         this.drawPile = new ArrayList<>();
