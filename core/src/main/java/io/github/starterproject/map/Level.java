@@ -23,7 +23,7 @@ public class Level {
         nodes.add(new Boss());
         nodes.add(new Campfire());
         nodes.add(new Merchant());
-        nodes.add(new Enemy());
+        nodes.add(new Elite());
         nodes.add(new Treasure());
         nodes.add(new Enemy());
         nodes.add(new Enemy());

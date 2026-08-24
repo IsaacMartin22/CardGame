@@ -96,7 +96,9 @@ public class TheGameClass extends Game {
     }
 
     private void loadMusic() {
-        assets.load("audio/music/music.mp3", Music.class);
+        assets.load("audio/music/battle_music.mp3", Music.class);
+        assets.load("audio/music/boss_music.mp3", Music.class);
+        assets.load("audio/music/elite_music.mp3", Music.class);
         assets.load("audio/music/ice_music.mp3", Music.class);
     }
 

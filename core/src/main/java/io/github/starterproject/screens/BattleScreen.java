@@ -3,6 +3,7 @@ package io.github.starterproject.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -30,6 +31,7 @@ import io.github.starterproject.game.Battle;
 import io.github.starterproject.game.BattleEnemy;
 import io.github.starterproject.game.Hand;
 import io.github.starterproject.game.TheGameClass;
+import io.github.starterproject.map.Enemy;
 import io.github.starterproject.map.MapNodeType;
 import io.github.starterproject.overlays.DebugOverlay;
 import io.github.starterproject.overlays.RunInfoOverlay;
@@ -59,11 +61,17 @@ public class BattleScreen implements Screen {
     private HandActor handActor;
     private EnemyActor enemyActor;
     private PlayerActor playerActor;
+
+    private final Music battleMusic;
+    private final Music eliteMusic;
+    private final Music bossMusic;
     private Sound blockGainSound;
     private Sound attackSound;
+    private MapNodeType type;
 
     public BattleScreen(final TheGameClass game, MapNodeType type) {
         this.game = game;
+        this.type = type;
         this.stage = new Stage(new ScreenViewport());
         this.battle = new Battle(game, new BattleEnemy());
         this.battle.initializePiles(game.deck);
@@ -156,11 +164,41 @@ public class BattleScreen implements Screen {
         });
 
         layoutBattlefield();
+
+        this.battleMusic = game.assets.get("audio/music/battle_music.mp3", Music.class);
+        battleMusic.setLooping(true);
+        //battleMusic.setVolume(0f);
+        battleMusic.setVolume(.7f);
+
+        this.eliteMusic = game.assets.get("audio/music/elite_music.mp3", Music.class);
+        eliteMusic.setLooping(true);
+        //eliteMusic.setVolume(0f);
+        eliteMusic.setVolume(.7f);
+
+        this.bossMusic = game.assets.get("audio/music/boss_music.mp3", Music.class);
+        bossMusic.setLooping(true);
+        //bossMusic.setVolume(0f);
+        bossMusic.setVolume(.7f);
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        if (type.equals(MapNodeType.BOSS)) {
+            bossMusic.play();
+            eliteMusic.stop();
+            battleMusic.stop();
+        }
+        else if (type.equals(MapNodeType.ELITE)) {
+            eliteMusic.play();
+            bossMusic.stop();
+            battleMusic.stop();
+        }
+        else {
+            battleMusic.play();
+            eliteMusic.stop();
+            bossMusic.stop();
+        }
     }
 
     @Override
