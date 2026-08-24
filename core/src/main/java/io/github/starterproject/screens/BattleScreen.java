@@ -167,17 +167,14 @@ public class BattleScreen implements Screen {
 
         this.battleMusic = game.assets.get("audio/music/battle_music.mp3", Music.class);
         battleMusic.setLooping(true);
-        //battleMusic.setVolume(0f);
         battleMusic.setVolume(.7f);
 
         this.eliteMusic = game.assets.get("audio/music/elite_music.mp3", Music.class);
         eliteMusic.setLooping(true);
-        //eliteMusic.setVolume(0f);
         eliteMusic.setVolume(.7f);
 
         this.bossMusic = game.assets.get("audio/music/boss_music.mp3", Music.class);
         bossMusic.setLooping(true);
-        //bossMusic.setVolume(0f);
         bossMusic.setVolume(.7f);
     }
 
@@ -186,18 +183,12 @@ public class BattleScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         if (type.equals(MapNodeType.BOSS)) {
             bossMusic.play();
-            eliteMusic.stop();
-            battleMusic.stop();
         }
         else if (type.equals(MapNodeType.ELITE)) {
             eliteMusic.play();
-            bossMusic.stop();
-            battleMusic.stop();
         }
         else {
             battleMusic.play();
-            eliteMusic.stop();
-            bossMusic.stop();
         }
     }
 
@@ -239,11 +230,18 @@ public class BattleScreen implements Screen {
     public void resume() { }
 
     @Override
-    public void hide() { }
+    public void hide() {
+        battleMusic.stop();
+        eliteMusic.stop();
+        bossMusic.stop();
+    }
 
     @Override
     public void dispose() {
         stage.dispose();
+        battleMusic.dispose();
+        eliteMusic.dispose();
+        bossMusic.dispose();
     }
 
     private void layoutBattlefield() {

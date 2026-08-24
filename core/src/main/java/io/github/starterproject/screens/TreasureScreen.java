@@ -29,18 +29,18 @@ public class TreasureScreen implements Screen {
         Image backgroundImage = new Image(game.assets.get("backgrounds/treasure_chest.png", Texture.class));
         backgroundImage.setFillParent(true);
 
-        TextButton returnToTitle = new TextButton("Return to Title Screen", game.skin);
+        TextButton resume = new TextButton("Resume", game.skin);
 
         table.add(backgroundImage).fill().expand();
         table.row();
-        table.add(returnToTitle).width(200).height(60).pad(10);
+        table.add(resume).width(200).height(60).pad(10);
 
         stage.addActor(table);
 
-        returnToTitle.addListener(new ClickListener() {
+        resume.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.screenStack.popToRoot();
+                game.screenStack.pop();
                 dispose();
             }
         });

@@ -59,8 +59,8 @@ public class MainMenuScreen implements Screen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MapScreen mapScreen = new MapScreen(game, true);
-                game.screenStack.push(mapScreen);
+                LevelSelectScreen levelSelectScreen = new LevelSelectScreen(game, () -> new MapScreen(game));
+                game.screenStack.push(levelSelectScreen);
                 music.stop();
             }
         });
