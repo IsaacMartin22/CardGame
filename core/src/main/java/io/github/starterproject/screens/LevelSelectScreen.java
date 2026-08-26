@@ -219,7 +219,7 @@ public class LevelSelectScreen implements Screen {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            game.screenStack.pop();
+            game.screenStack.push(new MapScreen(game));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {

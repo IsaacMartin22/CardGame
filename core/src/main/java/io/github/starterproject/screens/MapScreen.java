@@ -34,7 +34,7 @@ public class MapScreen implements Screen {
         this.locked = false;
         this.stage = new Stage(new ScreenViewport());
 
-        Image mapBackground = new Image(game.assets.get("backgrounds/map.png", Texture.class));
+        Image mapBackground = new Image(game.assets.get("backgrounds/map.jpg", Texture.class));
         mapBackground.setPosition(game.stage.getWidth() / 2, game.stage.getHeight() / 2, Align.center);
 
         Table table = new Table();
