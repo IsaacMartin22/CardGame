@@ -16,13 +16,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
 
-public class SettingsScreen implements Screen {
+public class ControlsScreen implements Screen {
     private final TheGameClass game;
     private final Stage stage;
     private final Screen backgroundScreen;
     private final Texture dimTexture;
 
-    public SettingsScreen(final TheGameClass game) {
+    public ControlsScreen(final TheGameClass game) {
         this.game = game;
         this.backgroundScreen = game.screenStack.peek();
         this.stage = new Stage(new ScreenViewport());
@@ -39,71 +39,52 @@ public class SettingsScreen implements Screen {
 
         Table modal = new Table(game.skin);
         modal.setBackground("default-round");
-        modal.defaults().width(220).height(60).pad(8);
+        modal.defaults().width(300).pad(8);
 
-        TextButton resumeButton = new TextButton("Resume", game.skin);
-        TextButton controls = new TextButton("Controls", game.skin);
-        TextButton credits = new TextButton("Credits", game.skin);
-        TextButton saveAndQuit = new TextButton("Save and Quit", game.skin);
-        TextButton quitButton = new TextButton("Quit", game.skin);
-
-        Label title = new Label("Settings", game.skin);
+        Label title = new Label("Controls", game.skin);
         modal.add(title).padBottom(12);
         modal.row();
-        modal.add(resumeButton);
+
+        addControlLine(modal, "ESC", "Open Settings / Go Back");
+        addControlLine(modal, "D", "Open Deck Screen");
+        addControlLine(modal, "M", "Go to Map Screen");
+        addControlLine(modal, "Arrows/WASD", "Navigate");
+
+        TextButton backButton = new TextButton("Back", game.skin);
+        backButton.setWidth(300);
+        backButton.setHeight(60);
         modal.row();
-        modal.add(controls);
-        modal.row();
-        modal.add(credits);
-        modal.row();
-        modal.add(saveAndQuit);
-        modal.row();
-        modal.add(quitButton);
+        modal.add(backButton).width(300).height(60).padTop(12);
 
         Table root = new Table();
         root.setFillParent(true);
         root.center();
-        root.add(modal).width(300).pad(20);
+        root.add(modal).width(400).pad(20);
 
         stage.addActor(dimOverlay);
         stage.addActor(root);
 
-        resumeButton.addListener(new ClickListener() {
+        backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.screenStack.pop();
                 dispose();
             }
         });
+    }
 
-        controls.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.screenStack.push(new ControlsScreen(game));
-            }
-        });
+    private void addControlLine(Table table, String key, String description) {
+        Table controlRow = new Table(game.skin);
+        controlRow.defaults().width(175).height(40).pad(4);
 
-        credits.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.screenStack.push(new CreditsScreen(game));
-            }
-        });
+        Label keyLabel = new Label(key, game.skin);
+        Label descLabel = new Label(description, game.skin);
 
-        saveAndQuit.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.screenStack.popToRoot();
-                dispose();
-            }
-        });
+        controlRow.add(keyLabel).width(150);
+        controlRow.add(descLabel).width(200);
 
-        quitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
-            }
-        });
+        table.add(controlRow).width(350);
+        table.row();
     }
 
     @Override
