@@ -51,7 +51,6 @@ public class MapScreen implements Screen {
         this.debugOverlay = new DebugOverlay(stage, game.skin);
         this.runInfoOverlay = new RunInfoOverlay(game);
         stage.addActor(runInfoOverlay);
-        runInfoOverlay.addGearButton(stage);
 
         stage.addActor(table);
 

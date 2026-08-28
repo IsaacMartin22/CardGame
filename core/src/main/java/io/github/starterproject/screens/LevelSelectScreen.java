@@ -18,7 +18,10 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
 import io.github.starterproject.map.MapNodeType;
@@ -75,6 +78,7 @@ public class LevelSelectScreen implements Screen {
     private final Vector3 resumePosition;
     private final TriggerZone[] triggerZones;
     private boolean debugCameraMode;
+    private final InputMultiplexer inputMultiplexer;
 
     public LevelSelectScreen(final TheGameClass game) {
         this.game = game;
@@ -86,6 +90,13 @@ public class LevelSelectScreen implements Screen {
 
         this.runInfoOverlay = new RunInfoOverlay(game);
         this.hudStage.addActor(runInfoOverlay);
+        this.inputMultiplexer = new InputMultiplexer();
+        this.hudStage.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                return false;
+            }
+        });
 
         this.camera = new PerspectiveCamera(67f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         this.camera.near = 0.1f;
@@ -238,7 +249,9 @@ public class LevelSelectScreen implements Screen {
     @Override
     public void show() {
         playerPosition.set(resumePosition);
-        Gdx.input.setInputProcessor(null);
+        inputMultiplexer.clear();
+        inputMultiplexer.addProcessor(hudStage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override

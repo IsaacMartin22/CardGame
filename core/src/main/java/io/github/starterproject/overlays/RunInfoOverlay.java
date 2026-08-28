@@ -16,9 +16,12 @@ import io.github.starterproject.game.TheGameClass;
 import io.github.starterproject.screens.SettingsScreen;
 
 public class RunInfoOverlay extends Table {
+    private static final float BAR_HEIGHT = 80f;
+    private static final float ICON_SIZE = 60f;
     private final TheGameClass game;
     private final Label healthText;
     private final Label goldText;
+    private final TextButton settingsButton;
 
     public RunInfoOverlay(final TheGameClass game) {
         super(game.skin);
@@ -37,8 +40,8 @@ public class RunInfoOverlay extends Table {
 
         // Set the bar to span the full width and have fixed height
         this.setWidth(Gdx.graphics.getWidth());
-        this.setHeight(80);
-        this.setPosition(0, Gdx.graphics.getHeight() - 80);
+        this.setHeight(BAR_HEIGHT);
+        this.setPosition(0, Gdx.graphics.getHeight() - BAR_HEIGHT);
 
         Image healthPng = new Image(game.assets.get("icons/health.png", Texture.class));
         this.healthText = new Label(game.player.currentHP + "/" + game.player.maxHP, game.skin);
@@ -52,29 +55,26 @@ public class RunInfoOverlay extends Table {
         this.add(this.healthText).width(200).height(60).pad(10);
         this.add(goldPng).width(60).height(60).pad(10);
         this.add(this.goldText).width(60).height(60).pad(10);
-    }
-    
-    public void addGearButton(Stage stage) {
-        TextButton gearButton = new TextButton("⚙", game.skin);
-        gearButton.setSize(70, 70);
-        gearButton.setPosition(Gdx.graphics.getWidth() - 85, Gdx.graphics.getHeight() - 85);
-        gearButton.getLabel().setFontScale(5f);
-        
-        gearButton.addListener(new ClickListener() {
+
+        this.add().expandX();
+
+        this.settingsButton = new TextButton("Settings", game.skin);
+        this.settingsButton.getLabel().setFontScale(1.2f);
+        this.settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.screenStack.push(new SettingsScreen(game));
             }
         });
-        
-        stage.addActor(gearButton);
+        this.add(this.settingsButton).width(180).height(ICON_SIZE).padRight(12);
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
+        this.setWidth(Gdx.graphics.getWidth());
+        this.setPosition(0, Gdx.graphics.getHeight() - BAR_HEIGHT);
         healthText.setText(game.player.currentHP + "/" + game.player.maxHP);
         goldText.setText(String.valueOf(game.player.gold));
     }
 }
-
