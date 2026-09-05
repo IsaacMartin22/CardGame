@@ -49,7 +49,7 @@ public class MerchantScreen implements Screen {
             }
         });
 
-        this.debugOverlay = new DebugOverlay(stage, game.skin);
+        this.debugOverlay = new DebugOverlay(stage, game.skin, game);
         this.runInfoOverlay = new RunInfoOverlay(game);
         stage.addActor(runInfoOverlay);
     }

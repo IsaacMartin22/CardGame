@@ -30,7 +30,7 @@ public class DeckScreen implements Screen {
 
 
 
-        this.debugOverlay = new DebugOverlay(stage, game.skin);
+        this.debugOverlay = new DebugOverlay(stage, game.skin, game);
         this.runInfoOverlay = new RunInfoOverlay(game);
 
         table.padTop(80f);

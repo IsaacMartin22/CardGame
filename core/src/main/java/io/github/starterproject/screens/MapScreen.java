@@ -48,12 +48,16 @@ public class MapScreen implements Screen {
             table.row();
         }
 
-        this.debugOverlay = new DebugOverlay(stage, game.skin);
+        this.debugOverlay = new DebugOverlay(stage, game.skin, game);
         this.runInfoOverlay = new RunInfoOverlay(game);
         stage.addActor(runInfoOverlay);
 
         stage.addActor(table);
 
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 
     @Override
@@ -75,7 +79,13 @@ public class MapScreen implements Screen {
         }
         else {
             if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-                game.screenStack.push(new DeckScreen(game));
+                DeckScreen existingDeckScreen = game.screenStack.findTopmost(DeckScreen.class);
+                if (existingDeckScreen != null) {
+                    game.screenStack.moveToTop(existingDeckScreen);
+                }
+                else {
+                    game.screenStack.push(new DeckScreen(game));
+                }
             }
         }
     }

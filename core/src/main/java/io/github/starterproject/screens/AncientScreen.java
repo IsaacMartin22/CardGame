@@ -40,7 +40,7 @@ public class AncientScreen implements Screen {
         stage.addActor(backgroundImage);
         stage.addActor(table);
 
-        this.debugOverlay = new DebugOverlay(stage, game.skin);
+        this.debugOverlay = new DebugOverlay(stage, game.skin, game);
         this.runInfoOverlay = new RunInfoOverlay(game);
         stage.addActor(runInfoOverlay);
 
@@ -66,7 +66,13 @@ public class AncientScreen implements Screen {
         stage.draw();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            game.screenStack.push(new DeckScreen(game));
+            DeckScreen existingDeckScreen = game.screenStack.findTopmost(DeckScreen.class);
+            if (existingDeckScreen != null) {
+                game.screenStack.moveToTop(existingDeckScreen);
+            }
+            else {
+                game.screenStack.push(new DeckScreen(game));
+            }
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {

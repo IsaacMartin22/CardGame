@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import io.github.starterproject.game.TheGameClass;
 import io.github.starterproject.screens.DeckScreen;
+import io.github.starterproject.screens.MapScreen;
 import io.github.starterproject.screens.SettingsScreen;
 
 public class RunInfoOverlay extends Table {
@@ -64,10 +65,39 @@ public class RunInfoOverlay extends Table {
                     game.screenStack.pop();
                     return;
                 }
+                DeckScreen existingDeckScreen = game.screenStack.findTopmost(DeckScreen.class);
+                if (existingDeckScreen != null) {
+                    game.screenStack.moveToTop(existingDeckScreen);
+                    return;
+                }
                 game.screenStack.push(new DeckScreen(game));
             }
         });
         this.add(deckButton).width(120).height(ICON_SIZE).padRight(12);
+
+        TextButton mapButton = new TextButton("Map", game.skin);
+        mapButton.getLabel().setFontScale(1.2f);
+        mapButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (game.screenStack.peek() instanceof MapScreen) {
+                    MapScreen currentMapScreen = (MapScreen) game.screenStack.peek();
+                    if (!currentMapScreen.isLocked()) {
+                        game.screenStack.pop();
+                    }
+                    return;
+                }
+
+                MapScreen existingMapScreen = game.screenStack.findTopmost(MapScreen.class);
+                if (existingMapScreen != null) {
+                    game.screenStack.moveToTop(existingMapScreen);
+                    return;
+                }
+
+                game.screenStack.push(new MapScreen(game));
+            }
+        });
+        this.add(mapButton).width(120).height(ICON_SIZE).padRight(12);
 
         TextButton settingsButton = new TextButton("Settings", game.skin);
         settingsButton.getLabel().setFontScale(1.2f);
