@@ -34,4 +34,8 @@ public class Deck {
     public void removeCard(Card card) {
         cards.remove(card);
     }
+
+    public void addCardToDeck(Card card) {
+        addCard(card);
+    }
 }

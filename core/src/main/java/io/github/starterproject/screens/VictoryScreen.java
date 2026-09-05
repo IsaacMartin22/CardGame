@@ -3,7 +3,6 @@ package io.github.starterproject.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,17 +16,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
+import io.github.starterproject.overlays.RunInfoOverlay;
 
 public class VictoryScreen implements Screen {
     private final TheGameClass game;
     private final Stage stage;
     private final Screen backgroundScreen;
     private final Texture dimTexture;
+    private final RunInfoOverlay runInfoOverlay;
 
     public VictoryScreen(final TheGameClass game) {
         this.game = game;
         this.backgroundScreen = game.screenStack.peek();
         this.stage = new Stage(new ScreenViewport());
+        this.runInfoOverlay = new RunInfoOverlay(game);
 
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(0f, 0f, 0f, 0.6f);
@@ -45,7 +47,7 @@ public class VictoryScreen implements Screen {
 
         TextButton rewardOne = new TextButton("Gold", game.skin);
         TextButton rewardTwo = new TextButton("Card Selection", game.skin);
-        TextButton continueButton = new TextButton("Continue", game.skin);
+        TextButton continueButton = new TextButton("Resume", game.skin);
 
         Label title = new Label("Victory", game.skin);
         modal.add(title).padBottom(12);
@@ -62,6 +64,7 @@ public class VictoryScreen implements Screen {
         root.add(modal).width(300).pad(20);
 
         stage.addActor(dimOverlay);
+        stage.addActor(runInfoOverlay);
         stage.addActor(root);
 
         rewardOne.addListener(new ClickListener() {
@@ -79,7 +82,7 @@ public class VictoryScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!rewardTwo.isDisabled()) {
-
+                    game.screenStack.push(new CardRewardsScreen(game));
                 }
                 rewardTwo.setDisabled(true);
                 rewardTwo.setChecked(true);
@@ -89,7 +92,6 @@ public class VictoryScreen implements Screen {
         continueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Pop the rewards screen and immediately pop the battle screen to go back to the map
                 game.screenStack.pop();
                 game.screenStack.pop();
                 dispose();
@@ -102,6 +104,8 @@ public class VictoryScreen implements Screen {
         if (backgroundScreen != null) {
             backgroundScreen.render(delta);
         }
+
+        ScreenUtils.clear(0f, 0f, 0f, 0f);
 
         stage.act(delta);
         stage.draw();
@@ -123,17 +127,14 @@ public class VictoryScreen implements Screen {
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
