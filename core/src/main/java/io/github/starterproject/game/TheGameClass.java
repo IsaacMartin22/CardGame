@@ -51,6 +51,7 @@ public class TheGameClass extends Game {
 
     private void loadAssets() {
         this.assets = new AssetManager();
+        loadStatuses();
         loadCards();
         loadSounds();
         loadMusic();
@@ -61,12 +62,23 @@ public class TheGameClass extends Game {
         assets.finishLoading();
     }
 
+    private void loadStatuses() {
+        assets.load("status/vulnerable.png", Texture.class);
+        assets.load("status/weak.png", Texture.class);
+//        assets.load("status/strength.png", Texture.class);
+//        assets.load("status/dexterity.png", Texture.class);
+//        assets.load("status/poison.png", Texture.class);
+    }
+
     private void loadCards() {
         assets.load("cards/defend.png", Texture.class);
         assets.load("cards/strike.png", Texture.class);
         assets.load("cards/shelter.png", Texture.class);
         assets.load("cards/skewer.png", Texture.class);
         assets.load("cards/search.png", Texture.class);
+
+        assets.load("cards/debilitate.png", Texture.class);
+        assets.load("cards/sunder.png", Texture.class);
     }
 
     private void loadEnemies() {

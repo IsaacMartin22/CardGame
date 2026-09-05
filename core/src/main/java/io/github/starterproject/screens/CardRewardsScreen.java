@@ -15,7 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.actors.CardActor;
-import io.github.starterproject.cards.*;
+import io.github.starterproject.cards.Card;
+import io.github.starterproject.cards.Debilitate;
+import io.github.starterproject.cards.Search;
+import io.github.starterproject.cards.Shelter;
+import io.github.starterproject.cards.Skewer;
+import io.github.starterproject.cards.Sunder;
 import io.github.starterproject.game.TheGameClass;
 import io.github.starterproject.overlays.RunInfoOverlay;
 
@@ -144,6 +149,8 @@ public class CardRewardsScreen implements Screen {
         pool.add(Skewer::new);
         pool.add(Shelter::new);
         pool.add(Search::new);
+        pool.add(Sunder::new);
+        pool.add(Debilitate::new);
 
         List<Card> choices = new ArrayList<>();
         Collections.shuffle(pool);

@@ -7,6 +7,8 @@ import io.github.starterproject.cards.Search;
 import io.github.starterproject.cards.Shelter;
 import io.github.starterproject.cards.Skewer;
 import io.github.starterproject.cards.Strike;
+import io.github.starterproject.cards.Sunder;
+import io.github.starterproject.cards.Debilitate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,6 +98,14 @@ public class Battle {
         }
         else if (card instanceof Search) {
             drawCards(3);
+            played = true;
+        }
+        else if (card instanceof Sunder) {
+            enemy.applyVulnerable(3);
+            played = true;
+        }
+        else if (card instanceof Debilitate) {
+            enemy.applyWeak(3);
             played = true;
         }
         else {
