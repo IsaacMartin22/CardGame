@@ -31,4 +31,9 @@ public class Strike extends Card {
     public boolean isUpgraded() {
         return false;
     }
+
+    @Override
+    public String getArtworkPath() {
+        return "cards/strike.png";
+    }
 }

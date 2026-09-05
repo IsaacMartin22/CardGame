@@ -27,6 +27,7 @@ import io.github.starterproject.actors.PlayerActor;
 import io.github.starterproject.cards.Card;
 import io.github.starterproject.cards.CardType;
 import io.github.starterproject.cards.Defend;
+import io.github.starterproject.cards.Shelter;
 import io.github.starterproject.game.Battle;
 import io.github.starterproject.game.BattleEnemy;
 import io.github.starterproject.game.Hand;
@@ -348,7 +349,7 @@ public class BattleScreen implements Screen {
         if (card.getType() == CardType.ATTACK) {
             return CardFlickAction.Target.ENEMY;
         }
-        if (card instanceof Defend) {
+        if (card instanceof Defend || card instanceof Shelter) {
             return CardFlickAction.Target.PLAYER;
         }
         return null;

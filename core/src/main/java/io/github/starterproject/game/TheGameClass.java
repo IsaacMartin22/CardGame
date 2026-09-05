@@ -62,9 +62,11 @@ public class TheGameClass extends Game {
     }
 
     private void loadCards() {
-        assets.load("cards/bone.png", Texture.class);
-        assets.load("cards/leather.png", Texture.class);
-        assets.load("cards/porkchop.png", Texture.class);
+        assets.load("cards/defend.png", Texture.class);
+        assets.load("cards/strike.png", Texture.class);
+        assets.load("cards/shelter.png", Texture.class);
+        assets.load("cards/skewer.png", Texture.class);
+        assets.load("cards/search.png", Texture.class);
     }
 
     private void loadEnemies() {

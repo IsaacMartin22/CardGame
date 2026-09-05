@@ -2,6 +2,11 @@ package io.github.starterproject.game;
 
 import io.github.starterproject.cards.Card;
 import io.github.starterproject.cards.CardType;
+import io.github.starterproject.cards.Defend;
+import io.github.starterproject.cards.Search;
+import io.github.starterproject.cards.Shelter;
+import io.github.starterproject.cards.Skewer;
+import io.github.starterproject.cards.Strike;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,18 +78,40 @@ public class Battle {
         }
 
         boolean played = false;
-        switch (card.getType()) {
-            case ATTACK:
-                enemy.currentHP -= 30;
-                played = true;
-                break;
-            case SKILL:
-                game.player.currentBlock += 5;
-                played = true;
-                break;
-            case POWER:
-                played = false;
-                break;
+        if (card instanceof Strike) {
+            enemy.currentHP -= 6;
+            played = true;
+        }
+        else if (card instanceof Skewer) {
+            enemy.currentHP -= 9;
+            played = true;
+        }
+        else if (card instanceof Defend) {
+            game.player.currentBlock += 5;
+            played = true;
+        }
+        else if (card instanceof Shelter) {
+            game.player.currentBlock += 8;
+            played = true;
+        }
+        else if (card instanceof Search) {
+            drawCards(3);
+            played = true;
+        }
+        else {
+            switch (card.getType()) {
+                case ATTACK:
+                    enemy.currentHP -= 30;
+                    played = true;
+                    break;
+                case SKILL:
+                    game.player.currentBlock += 5;
+                    played = true;
+                    break;
+                case POWER:
+                    played = false;
+                    break;
+            }
         }
 
         if (played) {

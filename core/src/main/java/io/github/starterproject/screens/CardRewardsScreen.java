@@ -10,13 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.actors.CardActor;
-import io.github.starterproject.cards.Card;
-import io.github.starterproject.cards.Defend;
-import io.github.starterproject.cards.Strike;
+import io.github.starterproject.cards.*;
 import io.github.starterproject.game.TheGameClass;
 import io.github.starterproject.overlays.RunInfoOverlay;
 
@@ -75,7 +74,22 @@ public class CardRewardsScreen implements Screen {
             cardRow.add(cardActor).width(cardActor.getWidth()).height(cardActor.getHeight());
         }
 
+        TextButton skipButton = new TextButton("Skip", game.skin);
+        skipButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (picked) {
+                    return;
+                }
+                picked = true;
+                game.screenStack.pop();
+                dispose();
+            }
+        });
+
         root.add(cardRow);
+        root.row();
+        root.add(skipButton).width(140f).height(60f).padTop(8f);
         stage.addActor(background);
         stage.addActor(runInfoOverlay);
         stage.addActor(root);
@@ -127,8 +141,9 @@ public class CardRewardsScreen implements Screen {
 
     private List<Card> createCardChoices() {
         List<Supplier<Card>> pool = new ArrayList<>();
-        pool.add(Strike::new);
-        pool.add(Defend::new);
+        pool.add(Skewer::new);
+        pool.add(Shelter::new);
+        pool.add(Search::new);
 
         List<Card> choices = new ArrayList<>();
         Collections.shuffle(pool);

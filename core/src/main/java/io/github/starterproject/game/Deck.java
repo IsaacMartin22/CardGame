@@ -2,6 +2,9 @@ package io.github.starterproject.game;
 
 import io.github.starterproject.cards.Card;
 import io.github.starterproject.cards.Defend;
+import io.github.starterproject.cards.Search;
+import io.github.starterproject.cards.Shelter;
+import io.github.starterproject.cards.Skewer;
 import io.github.starterproject.cards.Strike;
 
 import java.util.ArrayList;

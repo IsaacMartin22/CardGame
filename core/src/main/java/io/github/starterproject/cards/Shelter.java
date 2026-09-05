@@ -1,6 +1,6 @@
 package io.github.starterproject.cards;
 
-public class Defend extends Card {
+public class Shelter extends Card {
 
     @Override
     public int getCost() {
@@ -14,12 +14,12 @@ public class Defend extends Card {
 
     @Override
     public String getName() {
-        return "Defend";
+        return "Shelter";
     }
 
     @Override
     public String getDescription() {
-        return "Gain 5 Block.";
+        return "Gain 8 Block.";
     }
 
     @Override
@@ -34,6 +34,6 @@ public class Defend extends Card {
 
     @Override
     public String getArtworkPath() {
-        return "cards/defend.png";
+        return "cards/shelter.png";
     }
 }
