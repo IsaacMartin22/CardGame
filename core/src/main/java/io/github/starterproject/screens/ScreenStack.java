@@ -45,6 +45,10 @@ public class ScreenStack {
         return screenStack.isEmpty() ? null : screenStack.peek();
     }
 
+    public Screen peekBelowTop() {
+        return screenStack.size() < 2 ? null : screenStack.get(screenStack.size() - 2);
+    }
+
     public int size() {
         return screenStack.size();
     }
@@ -53,4 +57,3 @@ public class ScreenStack {
         screenStack.clear();
     }
 }
-

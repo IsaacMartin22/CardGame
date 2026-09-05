@@ -101,11 +101,11 @@ public class VictoryScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        ScreenUtils.clear(0f, 0f, 0f, 0f);
+
         if (backgroundScreen != null) {
             backgroundScreen.render(delta);
         }
-
-        ScreenUtils.clear(0f, 0f, 0f, 0f);
 
         stage.act(delta);
         stage.draw();

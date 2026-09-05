@@ -48,7 +48,6 @@ public class ControlsScreen implements Screen {
         addControlLine(modal, "ESC", "Open Settings / Go Back");
         addControlLine(modal, "D", "Open Deck Screen");
         addControlLine(modal, "M", "Go to Map Screen");
-        addControlLine(modal, "Arrows/WASD", "Navigate");
 
         TextButton backButton = new TextButton("Back", game.skin);
         backButton.setWidth(300);

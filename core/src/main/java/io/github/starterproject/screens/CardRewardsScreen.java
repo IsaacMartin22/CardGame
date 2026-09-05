@@ -35,7 +35,7 @@ public class CardRewardsScreen implements Screen {
 
     public CardRewardsScreen(final TheGameClass game) {
         this.game = game;
-        this.backgroundScreen = game.screenStack.peek();
+        this.backgroundScreen = game.screenStack.peekBelowTop();
         this.stage = new Stage(new ScreenViewport());
         this.runInfoOverlay = new RunInfoOverlay(game);
 
@@ -83,11 +83,12 @@ public class CardRewardsScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        ScreenUtils.clear(0f, 0f, 0f, 0f);
+
         if (backgroundScreen != null) {
             backgroundScreen.render(delta);
         }
 
-        ScreenUtils.clear(0f, 0f, 0f, 0f);
         stage.act(delta);
         stage.draw();
 
