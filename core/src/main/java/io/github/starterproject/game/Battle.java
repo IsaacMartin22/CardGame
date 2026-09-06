@@ -23,6 +23,7 @@ public class Battle {
     private final List<Card> exhaustPile;
 
     private Turn turn;
+    private int lastCardsDrawn;
 
     public Battle(TheGameClass game, BattleEnemy enemy) {
         this.game = game;
@@ -70,10 +71,12 @@ public class Battle {
             }
         }
 
+        lastCardsDrawn = drawn;
         return drawn;
     }
 
     public boolean playCardFromHand(int handIndex) {
+        lastCardsDrawn = 0;
         Card card = hand.getCard(handIndex);
         if (card == null) {
             return false;
@@ -179,6 +182,10 @@ public class Battle {
         return turn;
     }
 
+    public int getLastCardsDrawn() {
+        return lastCardsDrawn;
+    }
+
     public Hand getHand() {
         return hand;
     }
@@ -215,6 +222,10 @@ public class Battle {
 
     public int getEnemyBlock() {
         return enemy.currentBlock;
+    }
+
+    public BattleEnemy getEnemy() {
+        return enemy;
     }
 
     public int getPlayerHealth() {

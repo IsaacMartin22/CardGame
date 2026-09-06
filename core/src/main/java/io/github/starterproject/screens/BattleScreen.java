@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -32,10 +33,15 @@ import io.github.starterproject.game.Battle;
 import io.github.starterproject.game.BattleEnemy;
 import io.github.starterproject.game.Hand;
 import io.github.starterproject.game.TheGameClass;
+import io.github.starterproject.game.status.Status;
+import io.github.starterproject.game.status.Vulnerable;
+import io.github.starterproject.game.status.Weak;
 import io.github.starterproject.map.Enemy;
 import io.github.starterproject.map.MapNodeType;
 import io.github.starterproject.overlays.DebugOverlay;
 import io.github.starterproject.overlays.RunInfoOverlay;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BattleScreen implements Screen {
@@ -62,6 +68,7 @@ public class BattleScreen implements Screen {
     private HandActor handActor;
     private EnemyActor enemyActor;
     private PlayerActor playerActor;
+    private Table enemyStatusTable;
 
     private final Music battleMusic;
     private final Music eliteMusic;
@@ -130,12 +137,15 @@ public class BattleScreen implements Screen {
         endTurnTable.bottom().right();
         endTurnTable.add(endTurn).width(200).height(100).pad(0f, 32f, 32f, 32f);
 
+        enemyStatusTable = new Table();
+
         refreshHandView(initialDrawCount);
 
         // background should be behind the UI table
         stage.addActor(backgroundImage);
         stage.addActor(enemyActor);
         stage.addActor(playerActor);
+        stage.addActor(enemyStatusTable);
         stage.addActor(rootTable);
         stage.addActor(endTurnTable);
 
@@ -199,6 +209,7 @@ public class BattleScreen implements Screen {
 
         playerActor.setStats(battle.getPlayerHealth(), battle.getPlayerMaxHealth(), battle.getPlayerBlock());
         enemyActor.setStats(battle.getEnemyHealth(), battle.getEnemyMaxHealth(), battle.getEnemyBlock());
+        updateEnemyStatuses();
         stage.act(delta);
         layoutBattlefield();
         debugOverlay.update("Battle Screen");
@@ -260,6 +271,10 @@ public class BattleScreen implements Screen {
 
         float playerX = worldWidth * 0.1f;
         playerActor.setPosition(playerX, actorY);
+
+        float statusY = enemyActor.getY() - 40f;
+        enemyStatusTable.pack();
+        enemyStatusTable.setPosition(enemyActor.getX(), statusY);
     }
 
     private boolean playSelectedCard() {
@@ -296,7 +311,7 @@ public class BattleScreen implements Screen {
             finalizePlayedCard(shouldPlayAttackSound, shouldPlayBlockSound, battleResult);
         }
 
-        refreshHandView(0);
+        refreshHandView(battle.getLastCardsDrawn());
 
         return true;
     }
@@ -373,6 +388,30 @@ public class BattleScreen implements Screen {
 
     private void refreshHandView(int animatedCards) {
         handActor.setCards(battle.getHand().getCards(), animatedCards);
+    }
+
+    private void updateEnemyStatuses() {
+        enemyStatusTable.clearChildren();
+        List<Status> statuses = getEnemyStatuses();
+        for (Status status : statuses) {
+            Texture statusTexture = game.assets.get(status.getTexturePath(), Texture.class);
+            Image statusImage = new Image(statusTexture);
+            Label quantityLabel = new Label(String.valueOf(status.getQuantity()), game.skin);
+            enemyStatusTable.add(statusImage).size(28f, 28f).padRight(4f).center();
+            enemyStatusTable.add(quantityLabel).padRight(14f).center();
+        }
+    }
+
+    private List<Status> getEnemyStatuses() {
+        List<Status> statuses = new ArrayList<>();
+        BattleEnemy enemy = battle.getEnemy();
+        if (enemy.weak > 0) {
+            statuses.add(new Weak(enemy.weak));
+        }
+        if (enemy.vulnerable > 0) {
+            statuses.add(new Vulnerable(enemy.vulnerable));
+        }
+        return statuses;
     }
 
     private String getRandomEnemyBackground() {

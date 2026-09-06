@@ -28,8 +28,6 @@ public class DeckScreen implements Screen {
         table.setFillParent(true);
         table.top().left();
 
-
-
         this.debugOverlay = new DebugOverlay(stage, game.skin, game);
         this.runInfoOverlay = new RunInfoOverlay(game);
 

@@ -1,11 +1,6 @@
 package io.github.starterproject.game;
 
-import io.github.starterproject.cards.Card;
-import io.github.starterproject.cards.Defend;
-import io.github.starterproject.cards.Search;
-import io.github.starterproject.cards.Shelter;
-import io.github.starterproject.cards.Skewer;
-import io.github.starterproject.cards.Strike;
+import io.github.starterproject.cards.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,10 +15,15 @@ public class Deck {
 
     public void reset() {
         cards.clear();
-        for (int i = 0; i < 5; i++) {
-            addCard(new Defend());
-            addCard(new Strike());
-        }
+//        for (int i = 0; i < 5; i++) {
+//            addCard(new Defend());
+//            addCard(new Strike());
+//        }
+        addCard(new Sunder());
+        addCard(new Debilitate());
+        addCard(new Skewer());
+        addCard(new Shelter());
+        addCard(new Search());
     }
 
     public List<Card> getCards() {
