@@ -21,3 +21,12 @@ tasks.register('ramActionTest', JavaExec) {
 }
 
 check.dependsOn ramActionTest
+
+tasks.register('playerExitActionTest', JavaExec) {
+  dependsOn testClasses
+  classpath = sourceSets.test.runtimeClasspath
+  mainClass = 'io.github.starterproject.actions.PlayerExitActionTest'
+  enableAssertions = true
+}
+
+check.dependsOn playerExitActionTest

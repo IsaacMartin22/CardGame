@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.actions.CardFlickAction;
+import io.github.starterproject.actions.PlayerExitAction;
 import io.github.starterproject.actions.ScreenShakeAction;
 import io.github.starterproject.actors.CardActor;
 import io.github.starterproject.actors.EnemyActor;
@@ -70,6 +71,8 @@ public class BattleScreen implements Screen {
     private PlayerActor playerActor;
     private Table enemyStatusTable;
     private boolean playingCardAnimation;
+    private boolean leavingBattle;
+    private boolean playerExitFinished;
 
     private final Music battleMusic;
     private final Music eliteMusic;
@@ -169,7 +172,7 @@ public class BattleScreen implements Screen {
                     return;
                 }
                 if (battle.getBattleResult() == Battle.BattleResult.VICTORY) {
-                    game.screenStack.push(new VictoryScreen(game));
+                    game.screenStack.push(new VictoryScreen(game, BattleScreen.this));
                     return;
                 }
 
@@ -215,6 +218,13 @@ public class BattleScreen implements Screen {
         layoutBattlefield();
         debugOverlay.update("Battle Screen");
         stage.draw();
+
+        if (leavingBattle) {
+            if (playerExitFinished) {
+                game.screenStack.pop();
+            }
+            return;
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
             DeckScreen existingDeckScreen = game.screenStack.findTopmost(DeckScreen.class);
@@ -270,8 +280,10 @@ public class BattleScreen implements Screen {
         float enemyX = worldWidth - enemyActor.getWidth() - worldWidth * 0.1f;
         enemyActor.setPosition(enemyX, actorY);
 
-        float playerX = worldWidth * 0.1f;
-        playerActor.setPosition(playerX, actorY);
+        if (!leavingBattle) {
+            float playerX = worldWidth * 0.1f;
+            playerActor.setPosition(playerX, actorY);
+        }
 
         float statusY = enemyActor.getY() - 40f;
         enemyStatusTable.pack();
@@ -372,8 +384,19 @@ public class BattleScreen implements Screen {
             game.screenStack.push(new DeathScreen(game));
         }
         else if (battleResult == Battle.BattleResult.VICTORY) {
-            game.screenStack.push(new VictoryScreen(game));
+            game.screenStack.push(new VictoryScreen(game, this));
         }
+    }
+
+    void leaveAfterVictory() {
+        leavingBattle = true;
+        stage.cancelTouchFocus();
+        Gdx.input.setInputProcessor(null);
+        playerActor.toFront();
+        playerActor.addAction(new PlayerExitAction(
+            () -> stage.getViewport().getWorldWidth(),
+            () -> playerExitFinished = true
+        ));
     }
 
     private CardFlickAction.Target getFlickTarget(Card card) {

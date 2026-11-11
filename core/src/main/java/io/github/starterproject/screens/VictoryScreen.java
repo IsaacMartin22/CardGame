@@ -22,12 +22,14 @@ public class VictoryScreen implements Screen {
     private final TheGameClass game;
     private final Stage stage;
     private final Screen backgroundScreen;
+    private final BattleScreen battleScreen;
     private final Texture dimTexture;
     private final RunInfoOverlay runInfoOverlay;
 
-    public VictoryScreen(final TheGameClass game) {
+    public VictoryScreen(final TheGameClass game, BattleScreen battleScreen) {
         this.game = game;
-        this.backgroundScreen = game.screenStack.peek();
+        this.battleScreen = battleScreen;
+        this.backgroundScreen = battleScreen;
         this.stage = new Stage(new ScreenViewport());
         this.runInfoOverlay = new RunInfoOverlay(game);
 
@@ -93,7 +95,7 @@ public class VictoryScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.screenStack.pop();
-                game.screenStack.pop();
+                battleScreen.leaveAfterVictory();
                 dispose();
             }
         });
