@@ -10,9 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
 
@@ -46,9 +48,21 @@ public class SettingsScreen implements Screen {
         TextButton credits = new TextButton("Credits", game.skin);
         TextButton saveAndQuit = new TextButton("Save and Quit", game.skin);
         TextButton quitButton = new TextButton("Quit", game.skin);
+        Slider masterVolume = new Slider(0f, 1f, 0.01f, false, game.skin);
+        Slider musicVolume = new Slider(0f, 1f, 0.01f, false, game.skin);
+        masterVolume.setValue(game.masterVolume);
+        musicVolume.setValue(game.musicVolume);
 
         Label title = new Label("Settings", game.skin);
         modal.add(title).padBottom(12);
+        modal.row();
+        modal.add(new Label("Master Volume", game.skin)).height(24).pad(2);
+        modal.row();
+        modal.add(masterVolume).width(240).height(24).pad(2);
+        modal.row();
+        modal.add(new Label("Music Volume", game.skin)).height(24).pad(2);
+        modal.row();
+        modal.add(musicVolume).width(240).height(24).pad(2);
         modal.row();
         modal.add(resumeButton);
         modal.row();
@@ -67,6 +81,20 @@ public class SettingsScreen implements Screen {
 
         stage.addActor(dimOverlay);
         stage.addActor(root);
+
+        masterVolume.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
+                game.setMasterVolume(masterVolume.getValue());
+            }
+        });
+
+        musicVolume.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
+                game.setMusicVolume(musicVolume.getValue());
+            }
+        });
 
         resumeButton.addListener(new ClickListener() {
             @Override

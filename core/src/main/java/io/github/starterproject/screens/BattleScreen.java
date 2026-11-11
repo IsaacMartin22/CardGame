@@ -178,15 +178,12 @@ public class BattleScreen implements Screen {
 
         this.battleMusic = game.assets.get("audio/music/battle_music.mp3", Music.class);
         battleMusic.setLooping(true);
-        battleMusic.setVolume(.7f);
 
         this.eliteMusic = game.assets.get("audio/music/elite_music.mp3", Music.class);
         eliteMusic.setLooping(true);
-        eliteMusic.setVolume(.7f);
 
         this.bossMusic = game.assets.get("audio/music/boss_music.mp3", Music.class);
         bossMusic.setLooping(true);
-        bossMusic.setVolume(.7f);
     }
 
     @Override
@@ -346,10 +343,10 @@ public class BattleScreen implements Screen {
 
     private void finalizePlayedCard(boolean shouldPlayAttackSound, boolean shouldPlayBlockSound, Battle.BattleResult battleResult) {
         if (shouldPlayAttackSound) {
-            attackSound.play(ATTACK_SOUND_VOLUME);
+            game.playSound(attackSound, ATTACK_SOUND_VOLUME);
         }
         if (shouldPlayBlockSound) {
-            blockGainSound.play();
+            game.playSound(blockGainSound, 1f);
         }
 
         if (battleResult == Battle.BattleResult.DEFEAT) {

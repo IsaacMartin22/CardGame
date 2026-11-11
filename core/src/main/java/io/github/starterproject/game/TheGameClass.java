@@ -2,12 +2,15 @@ package io.github.starterproject.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.actors.CardActor;
 import io.github.starterproject.screens.ScreenStack;
@@ -15,6 +18,10 @@ import io.github.starterproject.map.Level;
 import io.github.starterproject.screens.MainMenuScreen;
 
 public class TheGameClass extends Game {
+    private static final String PREFERENCES_NAME = "CardGame";
+    private static final String MASTER_VOLUME_KEY = "masterVolume";
+    private static final String MUSIC_VOLUME_KEY = "musicVolume";
+
     public AssetManager assets;
     public Stage stage;
     public Skin skin;
@@ -25,8 +32,15 @@ public class TheGameClass extends Game {
     public Player player;
     public RunInfo runInfo;
     public Difficulty difficulty;
+    public float masterVolume = 1f;
+    public float musicVolume = 0.7f;
+    private Preferences preferences;
 
     public void create() {
+        preferences = Gdx.app.getPreferences(PREFERENCES_NAME);
+        masterVolume = preferences.getFloat(MASTER_VOLUME_KEY, masterVolume);
+        musicVolume = preferences.getFloat(MUSIC_VOLUME_KEY, musicVolume);
+
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.stage = new Stage(new ScreenViewport());
         this.deck = new Deck();
@@ -37,9 +51,39 @@ public class TheGameClass extends Game {
         this.difficulty = new Difficulty();
 
         loadAssets();
+        updateMusicVolume();
 
         // start with main menu screen
         screenStack.push(new MainMenuScreen(this));
+    }
+
+    public void setMasterVolume(float volume) {
+        masterVolume = MathUtils.clamp(volume, 0f, 1f);
+        preferences.putFloat(MASTER_VOLUME_KEY, masterVolume);
+        preferences.flush();
+        updateMusicVolume();
+    }
+
+    public void setMusicVolume(float volume) {
+        musicVolume = MathUtils.clamp(volume, 0f, 1f);
+        preferences.putFloat(MUSIC_VOLUME_KEY, musicVolume);
+        preferences.flush();
+        updateMusicVolume();
+    }
+
+    public void playSound(Sound sound, float volume) {
+        sound.play(masterVolume * volume);
+    }
+
+    private void updateMusicVolume() {
+        if (assets == null) {
+            return;
+        }
+
+        Array<Music> musicTracks = assets.getAll(Music.class, new Array<Music>());
+        for (Music music : musicTracks) {
+            music.setVolume(masterVolume * musicVolume);
+        }
     }
 
     public void reset() {
@@ -120,6 +164,7 @@ public class TheGameClass extends Game {
         assets.load("backgrounds/death.jpg", Texture.class);
 
         // Png
+        assets.load("backgrounds/ice_tunnels.png", Texture.class);
         assets.load("backgrounds/snowscape.png", Texture.class);
         assets.load("backgrounds/map.jpg", Texture.class);
         assets.load("backgrounds/campfire_background.png", Texture.class);
