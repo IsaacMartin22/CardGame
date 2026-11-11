@@ -126,6 +126,7 @@ public class TheGameClass extends Game {
     }
 
     private void loadEnemies() {
+        assets.load("characters/elf.png", Texture.class);
         assets.load("characters/spider.png", Texture.class);
         assets.load("characters/alien.png", Texture.class);
         assets.load("characters/shark.png", Texture.class);

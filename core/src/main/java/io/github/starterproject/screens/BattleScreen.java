@@ -116,7 +116,7 @@ public class BattleScreen implements Screen {
             }
         });
 
-        playerActor = new PlayerActor(game.skin, game.assets.get("characters/shark.png", Texture.class));
+        playerActor = new PlayerActor(game.skin, game.assets.get("characters/elf.png", Texture.class));
 
         TextButton endTurn = new TextButton("End Turn", game.skin);
 

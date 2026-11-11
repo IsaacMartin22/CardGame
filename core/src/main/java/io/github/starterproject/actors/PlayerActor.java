@@ -2,6 +2,7 @@ package io.github.starterproject.actors;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -24,7 +25,12 @@ public class PlayerActor extends Group {
 
         textureImage.setSize(IMAGE_SIZE, IMAGE_SIZE);
         textureImage.setOrigin(IMAGE_SIZE / 2f, IMAGE_SIZE / 2f);
-        textureImage.setScale(-1, 1);
+        textureImage.addAction(Actions.forever(Actions.sequence(
+            Actions.moveBy(-1.5f, 0f, 0.05f),
+            Actions.moveBy(3f, 1f, 0.1f),
+            Actions.moveBy(-1.5f, -1f, 0.05f),
+            Actions.delay(0.8f)
+        )));
         healthLabel.setAlignment(Align.center);
         blockLabel.setAlignment(Align.center);
 
