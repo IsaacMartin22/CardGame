@@ -69,6 +69,7 @@ public class BattleScreen implements Screen {
     private EnemyActor enemyActor;
     private PlayerActor playerActor;
     private Table enemyStatusTable;
+    private boolean playingCardAnimation;
 
     private final Music battleMusic;
     private final Music eliteMusic;
@@ -156,6 +157,9 @@ public class BattleScreen implements Screen {
         endTurn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                if (playingCardAnimation) {
+                    return;
+                }
                 int damageTaken = battle.endPlayerTurn();
                 if (damageTaken > 0) {
                     shakeScreen();
@@ -275,6 +279,9 @@ public class BattleScreen implements Screen {
     }
 
     private boolean playSelectedCard() {
+        if (playingCardAnimation) {
+            return false;
+        }
         int selectedHandIndex = handActor.getSelectedHandIndex();
         if (selectedHandIndex < 0) {
             return false;
@@ -293,19 +300,37 @@ public class BattleScreen implements Screen {
         boolean shouldPlayAttackSound = battle.getEnemyHealth() < enemyHealthBeforePlay;
         boolean shouldPlayBlockSound = battle.getPlayerBlock() > blockBeforePlay;
         Battle.BattleResult battleResult = battle.getBattleResult();
+        playingCardAnimation = true;
+        Runnable playSounds = () -> {
+            if (shouldPlayAttackSound) {
+                game.playSound(attackSound, ATTACK_SOUND_VOLUME);
+            }
+            if (shouldPlayBlockSound) {
+                game.playSound(blockGainSound, 1f);
+            }
+        };
+        Runnable completeCardAnimation = () -> {
+            if (selectedCard != null && selectedCard.getType() == CardType.ATTACK) {
+                playerActor.ramEnemy(enemyActor.getX(), playSounds, () -> finalizePlayedCard(battleResult));
+            }
+            else {
+                playSounds.run();
+                finalizePlayedCard(battleResult);
+            }
+        };
         if (selectedCard != null && hasSelectedCardCenter) {
             boolean startedFlickAnimation = playCardFlickAnimation(
                 selectedCard,
                 selectedCardCenter.x,
                 selectedCardCenter.y,
-                () -> finalizePlayedCard(shouldPlayAttackSound, shouldPlayBlockSound, battleResult)
+                completeCardAnimation
             );
             if (!startedFlickAnimation) {
-                finalizePlayedCard(shouldPlayAttackSound, shouldPlayBlockSound, battleResult);
+                completeCardAnimation.run();
             }
         }
         else {
-            finalizePlayedCard(shouldPlayAttackSound, shouldPlayBlockSound, battleResult);
+            completeCardAnimation.run();
         }
 
         refreshHandView(battle.getLastCardsDrawn());
@@ -341,14 +366,8 @@ public class BattleScreen implements Screen {
         return true;
     }
 
-    private void finalizePlayedCard(boolean shouldPlayAttackSound, boolean shouldPlayBlockSound, Battle.BattleResult battleResult) {
-        if (shouldPlayAttackSound) {
-            game.playSound(attackSound, ATTACK_SOUND_VOLUME);
-        }
-        if (shouldPlayBlockSound) {
-            game.playSound(blockGainSound, 1f);
-        }
-
+    private void finalizePlayedCard(Battle.BattleResult battleResult) {
+        playingCardAnimation = false;
         if (battleResult == Battle.BattleResult.DEFEAT) {
             game.screenStack.push(new DeathScreen(game));
         }

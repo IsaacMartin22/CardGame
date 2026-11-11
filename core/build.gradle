@@ -12,3 +12,12 @@ dependencies {
 jar {
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+tasks.register('ramActionTest', JavaExec) {
+  dependsOn testClasses
+  classpath = sourceSets.test.runtimeClasspath
+  mainClass = 'io.github.starterproject.actions.RamActionTest'
+  enableAssertions = true
+}
+
+check.dependsOn ramActionTest

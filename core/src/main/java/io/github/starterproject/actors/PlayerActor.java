@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
+import io.github.starterproject.actions.RamAction;
 
 public class PlayerActor extends Group {
     private static final float IMAGE_SIZE = 400f;
@@ -25,12 +26,6 @@ public class PlayerActor extends Group {
 
         textureImage.setSize(IMAGE_SIZE, IMAGE_SIZE);
         textureImage.setOrigin(IMAGE_SIZE / 2f, IMAGE_SIZE / 2f);
-        textureImage.addAction(Actions.forever(Actions.sequence(
-            Actions.moveBy(-1.5f, 0f, 0.05f),
-            Actions.moveBy(3f, 1f, 0.1f),
-            Actions.moveBy(-1.5f, -1f, 0.05f),
-            Actions.delay(0.8f)
-        )));
         healthLabel.setAlignment(Align.center);
         blockLabel.setAlignment(Align.center);
 
@@ -40,6 +35,26 @@ public class PlayerActor extends Group {
 
         setSize(IMAGE_SIZE, IMAGE_SIZE + LABEL_HEIGHT * 2f + LABEL_SPACING + PADDING * 2f);
         layoutActor();
+        startIdleAnimation();
+    }
+
+    public void ramEnemy(float enemyX, Runnable onImpact, Runnable onComplete) {
+        textureImage.clearActions();
+        layoutActor();
+        float distance = enemyX - getX() - textureImage.getWidth() * 0.5f;
+        textureImage.addAction(new RamAction(distance, onImpact, () -> {
+            startIdleAnimation();
+            onComplete.run();
+        }));
+    }
+
+    private void startIdleAnimation() {
+        textureImage.addAction(Actions.forever(Actions.sequence(
+            Actions.moveBy(-1.5f, 0f, 0.05f),
+            Actions.moveBy(3f, 1f, 0.1f),
+            Actions.moveBy(-1.5f, -1f, 0.05f),
+            Actions.delay(0.8f)
+        )));
     }
 
     public void setStats(int currentHealth, int maxHealth, int currentBlock) {
