@@ -9,6 +9,18 @@ This project was generated with a template including simple application launcher
 - `core`: Main module with the application logic shared by all platforms.
 - `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
 
+## Desktop icons
+
+The desktop launcher uses the root `logo.png` for its window and system-tray icons.
+On Windows it sets an explicit taskbar application identity before creating any UI
+and shares the window icons with the native window class before showing the window.
+The tray icon is removed when the game exits.
+
+To package the Windows launcher, run `.\gradlew.bat :lwjgl3:packageWinX64`.
+Extract the entire `lwjgl3\build\construo\dist\StarterProject-winX64.zip` and run
+`StarterProject.exe`. The packaged executable uses `lwjgl3\icons\logo.png`;
+update both logo files when changing the branding.
+
 ## Battle animation
 
 Each successfully played attack card triggers a player wind-up, ram into the enemy, and
