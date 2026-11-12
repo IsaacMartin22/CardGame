@@ -1,5 +1,6 @@
 package io.github.starterproject.lwjgl3;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
@@ -19,44 +20,12 @@ public class Lwjgl3Launcher {
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
         WindowsTaskbar.initialize();
-        TrayIcon trayIcon = createTrayIcon();
-        try {
-            createApplication();
-        } finally {
-            if (trayIcon != null) SystemTray.getSystemTray().remove(trayIcon);
-        }
+        createApplication();
     }
+
 
     private static Lwjgl3Application createApplication() {
         return new Lwjgl3Application(new TheGameClass(), getDefaultConfiguration());
-    }
-
-    private static TrayIcon createTrayIcon() {
-        if (!SystemTray.isSupported()) {
-            System.err.println("System tray is not supported on this desktop.");
-            return null;
-        }
-
-        URL logo = Lwjgl3Launcher.class.getResource("/logo.png");
-        if (logo == null) {
-            System.err.println("Could not find logo.png for the system tray.");
-            return null;
-        }
-
-        try {
-            Image image = ImageIO.read(logo);
-            if (image == null) {
-                System.err.println("Could not decode logo.png for the system tray.");
-                return null;
-            }
-            TrayIcon icon = new TrayIcon(image, "Sleigh the Spire");
-            icon.setImageAutoSize(true);
-            SystemTray.getSystemTray().add(icon);
-            return icon;
-        } catch (IOException | AWTException e) {
-            System.err.println("Could not create the system tray icon: " + e.getMessage());
-            return null;
-        }
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
@@ -72,7 +41,8 @@ public class Lwjgl3Launcher {
         //// useful for testing performance, but can also be very stressful to some hardware.
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
 
-        //configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+        // Initialize the Windows taskbar icon before entering fullscreen.
+        configuration.setInitialVisible(false);
         configuration.setWindowedMode(1280, 720);
 
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
@@ -82,6 +52,12 @@ public class Lwjgl3Launcher {
             @Override
             public void created(Lwjgl3Window window) {
                 WindowsTaskbar.setWindowIcons(window);
+                window.postRunnable(() -> {
+                    if (!Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode())) {
+                        throw new IllegalStateException("Could not enter fullscreen mode.");
+                    }
+                    window.setVisible(true);
+                });
             }
         });
 
