@@ -48,7 +48,6 @@ public class MainMenuScreen implements Screen {
 
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle(
             game.skin.get(TextButton.TextButtonStyle.class));
-        buttonStyle.font = titleFont;
         buttonStyle.up = null;
         buttonStyle.down = null;
         buttonStyle.checked = null;
