@@ -165,6 +165,7 @@ public class TheGameClass extends Game {
         assets.load("backgrounds/death.jpg", Texture.class);
 
         // Png
+        assets.load("backgrounds/main_menu.png", Texture.class);
         assets.load("backgrounds/ice_tunnels.png", Texture.class);
         assets.load("backgrounds/snowscape.png", Texture.class);
         assets.load("backgrounds/map.jpg", Texture.class);
