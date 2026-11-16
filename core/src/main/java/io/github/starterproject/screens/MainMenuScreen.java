@@ -23,6 +23,7 @@ public class MainMenuScreen implements Screen {
     private final Stage stage;
     private final Music music;
     private final DistanceFieldFont titleFont;
+    private final DistanceFieldFont buttonFont;
     private final ShaderProgram titleShader;
 
     public MainMenuScreen(final TheGameClass game) {
@@ -30,6 +31,8 @@ public class MainMenuScreen implements Screen {
         this.stage = new Stage(new ScreenViewport());
         this.titleFont = new DistanceFieldFont(Gdx.files.internal("fonts/spire-header.fnt"));
         this.titleFont.setDistanceFieldSmoothing(8f);
+        this.buttonFont = new DistanceFieldFont(Gdx.files.internal("fonts/spire-header.fnt"));
+        this.buttonFont.setDistanceFieldSmoothing(8f);
         this.titleShader = DistanceFieldFont.createDistanceFieldShader();
         this.stage.getBatch().setShader(titleShader);
 
@@ -48,30 +51,33 @@ public class MainMenuScreen implements Screen {
 
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle(
             game.skin.get(TextButton.TextButtonStyle.class));
+        buttonStyle.font = buttonFont;
         buttonStyle.up = null;
         buttonStyle.down = null;
         buttonStyle.checked = null;
-        buttonStyle.over = game.skin.newDrawable("white", new Color(1f, 1f, 1f, 0.25f));
+        buttonStyle.over = game.skin.newDrawable("purple", Color.PURPLE);
         buttonStyle.disabled = null;
 
-        TextButton playButton = new TextButton("Play", buttonStyle);
-        TextButton settingsButton = new TextButton("Settings", buttonStyle);
-        TextButton quitButton = new TextButton("Quit", buttonStyle);
+        TextButton playButton = new TextButton("PLAY", buttonStyle);
+        playButton.setWidth(400);
+
+        TextButton settingsButton = new TextButton("SETTINGS", buttonStyle);
+        TextButton quitButton = new TextButton("QUIT", buttonStyle);
 
         table.bottom().left();
 
-        table.add(titleLabel).width(1100).height(200).pad(200);
+        table.add(titleLabel).width(1100).height(200).padLeft(10);
         table.row();
         table.row();
         table.row();
         table.row();
         table.row();
         table.row();
-        table.add(playButton).width(200).height(60).pad(10);
+        table.add(playButton).width(400).height(150).pad(10).left();
         table.row();
-        table.add(settingsButton).width(200).height(60).pad(10);
+        table.add(settingsButton).width(400).height(150).pad(10).left();
         table.row();
-        table.add(quitButton).width(200).height(60).pad(10);
+        table.add(quitButton).width(400).height(150).pad(10).left();
 
         stage.addActor(backgroundImage);
         stage.addActor(table);

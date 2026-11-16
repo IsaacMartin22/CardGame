@@ -7,10 +7,14 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.DistanceFieldFont;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -77,6 +81,8 @@ public class BattleScreen implements Screen {
     private final Music battleMusic;
     private final Music eliteMusic;
     private final Music bossMusic;
+    private final DistanceFieldFont titleFont;
+    private final ShaderProgram titleShader;
     private Sound blockGainSound;
     private Sound attackSound;
     private MapNodeType type;
@@ -156,6 +162,39 @@ public class BattleScreen implements Screen {
         this.debugOverlay = new DebugOverlay(stage, game.skin, game);
         this.runInfoOverlay = new RunInfoOverlay(game);
         stage.addActor(runInfoOverlay);
+
+        titleFont = new DistanceFieldFont(Gdx.files.internal("fonts/spire-header.fnt"));
+        titleFont.setDistanceFieldSmoothing(8f);
+        titleShader = DistanceFieldFont.createDistanceFieldShader();
+        Label.LabelStyle enemyNameStyle = new Label.LabelStyle(game.skin.get(Label.LabelStyle.class));
+        enemyNameStyle.font = titleFont;
+        Label enemyName = new Label("SPIDER", enemyNameStyle) {
+            @Override
+            public void draw(Batch batch, float parentAlpha) {
+                ShaderProgram previousShader = batch.getShader();
+                batch.setShader(titleShader);
+                try {
+                    super.draw(batch, parentAlpha);
+                }
+                finally {
+                    batch.setShader(previousShader);
+                }
+            }
+        };
+        enemyName.setFontScale(1.2f);
+        Table enemyNameTable = new Table();
+        enemyNameTable.setFillParent(true);
+        enemyNameTable.setTouchable(Touchable.disabled);
+        enemyNameTable.top().padTop(runInfoOverlay.getHeight() + 24f);
+        enemyNameTable.add(enemyName);
+        enemyNameTable.getColor().a = 0f;
+        enemyNameTable.addAction(Actions.sequence(
+            Actions.fadeIn(0.5f),
+            Actions.delay(2f),
+            Actions.fadeOut(0.5f),
+            Actions.removeActor()
+        ));
+        stage.addActor(enemyNameTable);
 
         endTurn.addListener(new ClickListener() {
             @Override
@@ -268,6 +307,8 @@ public class BattleScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        titleFont.dispose();
+        titleShader.dispose();
         battleMusic.dispose();
         eliteMusic.dispose();
         bossMusic.dispose();
