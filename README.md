@@ -21,6 +21,15 @@ Extract the entire `lwjgl3\build\construo\dist\StarterProject-winX64.zip` and ru
 `StarterProject.exe`. The packaged executable uses `lwjgl3\icons\logo.png`;
 update both logo files when changing the branding.
 
+## Releases
+
+Commit or stash all work, then run `.\release.ps1` in PowerShell and choose
+`major`, `minor`, or `patch`. The command updates the version and creation date,
+creates a release commit, and pushes the current branch to its configured upstream.
+The version used by Gradle and the run info overlay comes from
+`core\src\main\resources\game-version.properties`. If the push fails, the release
+commit remains local; resolve the error and push it normally.
+
 ## Battle animation
 
 Each successfully played attack card triggers a player wind-up, ram into the enemy, and

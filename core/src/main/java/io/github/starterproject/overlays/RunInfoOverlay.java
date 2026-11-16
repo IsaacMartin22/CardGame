@@ -14,6 +14,10 @@ import io.github.starterproject.screens.DeckScreen;
 import io.github.starterproject.screens.MapScreen;
 import io.github.starterproject.screens.SettingsScreen;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class RunInfoOverlay extends Table {
     private static final float BAR_HEIGHT = 80f;
     private static final float ICON_SIZE = 60f;
@@ -55,6 +59,10 @@ public class RunInfoOverlay extends Table {
         this.add(this.goldText).width(60).height(60).pad(10);
 
         this.add().expandX();
+
+        com.badlogic.gdx.scenes.scene2d.ui.Label versionText = new com.badlogic.gdx.scenes.scene2d.ui.Label(getVersionText(), game.skin);
+        versionText.setFontScale(1.2f);
+        this.add(versionText).padRight(20);
 
         TextButton deckButton = new TextButton("Deck", game.skin);
         deckButton.getLabel().setFontScale(1.2f);
@@ -108,6 +116,21 @@ public class RunInfoOverlay extends Table {
             }
         });
         this.add(settingsButton).width(180).height(ICON_SIZE).padRight(12);
+    }
+
+    private static String getVersionText() {
+        Properties properties = new Properties();
+        try (InputStream input = Gdx.files.classpath("game-version.properties").read()) {
+            properties.load(input);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not read game version", e);
+        }
+        String version = properties.getProperty("version");
+        String date = properties.getProperty("date");
+        if (version == null || version.isEmpty() || date == null || date.isEmpty()) {
+            throw new IllegalStateException("Game version or creation date is missing");
+        }
+        return "Version " + version + " (created " + date + ")";
     }
 
     @Override

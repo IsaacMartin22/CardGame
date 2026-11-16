@@ -12,6 +12,15 @@ buildscript {
   }
 }
 
+def gameVersionProperties = new Properties()
+file('core/src/main/resources/game-version.properties').withInputStream {
+  gameVersionProperties.load(it)
+}
+ext.gameVersion = gameVersionProperties.getProperty('version')
+if (!gameVersion) {
+  throw new GradleException('Missing version in game-version.properties')
+}
+
 allprojects {
   apply plugin: 'eclipse'
   apply plugin: 'idea'
@@ -56,7 +65,7 @@ configure(subprojects) {
 }
 
 subprojects {
-  version = "$projectVersion"
+  version = rootProject.gameVersion
   ext.appName = 'StarterProject'
   repositories {
     mavenCentral()
