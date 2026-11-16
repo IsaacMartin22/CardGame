@@ -148,6 +148,7 @@ public class TheGameClass extends Game {
     }
 
     private void loadSounds() {
+        assets.load("audio/sfx/squish.mp3", Sound.class);
         assets.load("audio/sfx/blacksmithhammer.mp3", Sound.class);
         assets.load("audio/sfx/drop.mp3", Sound.class);
         assets.load("audio/sfx/crash.ogg", Sound.class);

@@ -85,6 +85,7 @@ public class BattleScreen implements Screen {
     private final ShaderProgram titleShader;
     private Sound blockGainSound;
     private Sound attackSound;
+    private Sound squishSound;
     private MapNodeType type;
 
     public BattleScreen(final TheGameClass game, MapNodeType type) {
@@ -114,6 +115,7 @@ public class BattleScreen implements Screen {
 
         this.blockGainSound = game.assets.get("audio/sfx/blacksmithhammer.mp3", Sound.class);
         this.attackSound = game.assets.get("audio/sfx/crash.ogg", Sound.class);
+        this.squishSound = game.assets.get("audio/sfx/squish.mp3", Sound.class);
 
         enemyActor = new EnemyActor(game.skin, game.assets.get("characters/spider.png", Texture.class));
         enemyActor.setTouchable(Touchable.enabled);
@@ -439,6 +441,7 @@ public class BattleScreen implements Screen {
         stage.cancelTouchFocus();
         Gdx.input.setInputProcessor(null);
         playerActor.toFront();
+        playerActor.addAction(Actions.delay(0.45f, Actions.run(() -> game.playSound(squishSound, 1f))));
         playerActor.addAction(new PlayerExitAction(
             () -> stage.getViewport().getWorldWidth(),
             () -> playerExitFinished = true

@@ -25,7 +25,7 @@ public class PlayerExitAction extends TemporalAction {
     @Override
     protected void update(float percent) {
         float endX = (float) worldWidth.getAsDouble() + 2f;
-        float endY = -getTarget().getHeight() - 1f;
+        float endY = -getTarget().getHeight() / 2f - 1f;
         getTarget().setPosition(
             startX + (endX - startX) * percent,
             startY + (endY - startY) * percent

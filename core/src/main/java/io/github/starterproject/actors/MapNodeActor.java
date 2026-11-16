@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -17,6 +18,8 @@ public class MapNodeActor extends Actor {
 
     MapNode node;
     Texture texture;
+    private boolean nextLocation;
+    private float pulseTime;
 
     public MapNodeActor(MapNode node, Consumer<MapNode> onClick, Skin skin) {
         super();
@@ -33,10 +36,28 @@ public class MapNodeActor extends Actor {
         });
     }
 
+    public void setNextLocation(boolean nextLocation) {
+        this.nextLocation = nextLocation;
+        if (!nextLocation) {
+            pulseTime = 0f;
+        }
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if (nextLocation) {
+            pulseTime += delta;
+        }
+    }
+
     @Override
     public void draw(Batch batch, float delta) {
         super.draw(batch, delta);
-        batch.draw(texture, getX(), getY(), getWidth(), getHeight());
+        float scale = nextLocation ? 1f + 0.1f * MathUtils.sin(pulseTime * MathUtils.PI2) : 1f;
+        float w = getWidth() * scale;
+        float h = getHeight() * scale;
+        batch.draw(texture, getX() + (getWidth() - w) / 2f, getY() + (getHeight() - h) / 2f, w, h);
         if (node.visited) {
             ensureWhitePixel();
             float x = getX();

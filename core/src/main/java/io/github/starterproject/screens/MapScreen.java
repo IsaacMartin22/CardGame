@@ -17,9 +17,13 @@ import io.github.starterproject.actors.MapNodeActor;
 import io.github.starterproject.overlays.DebugOverlay;
 import io.github.starterproject.overlays.RunInfoOverlay;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MapScreen implements Screen {
     private final TheGameClass game;     // member
     private final Stage stage;
+    private final List<MapNodeActor> mapNodeActors = new ArrayList<>();
     private boolean locked;
     final DebugOverlay debugOverlay;
     final RunInfoOverlay runInfoOverlay;
@@ -44,7 +48,9 @@ public class MapScreen implements Screen {
         stage.addActor(mapBackground);
 
         for (MapNode node : game.level.nodes) {
-            table.add(new MapNodeActor(node, this::openNode, game.skin)).width(75).height(75).pad(10);
+            MapNodeActor actor = new MapNodeActor(node, this::openNode, game.skin);
+            mapNodeActors.add(actor);
+            table.add(actor).width(75).height(75).pad(10);
             table.row();
         }
 
@@ -143,6 +149,9 @@ public class MapScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        for (int i = 0; i < mapNodeActors.size(); i++) {
+            mapNodeActors.get(i).setNextLocation(canOpenNode(game.level.nodes.get(i)));
+        }
     }
 
     @Override
