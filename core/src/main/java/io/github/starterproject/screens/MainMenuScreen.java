@@ -61,25 +61,24 @@ public class MainMenuScreen implements Screen {
         buttonStyle.disabled = null;
 
         TextButton playButton = new TextButton("PLAY", buttonStyle);
-        playButton.setWidth(400);
-
         TextButton settingsButton = new TextButton("SETTINGS", buttonStyle);
         TextButton quitButton = new TextButton("QUIT", buttonStyle);
 
         table.bottom().left();
 
-        table.add(titleLabel).width(1100).height(200).padLeft(10);
+        table.row();
+        table.add(titleLabel).width(1100).height(200).padLeft(100);
         table.row();
         table.row();
         table.row();
         table.row();
         table.row();
         table.row();
-        table.add(playButton).width(400).height(150).pad(10).left();
+        table.add(playButton).width(400).height(100).pad(30).left();
         table.row();
-        table.add(settingsButton).width(400).height(150).pad(10).left();
+        table.add(settingsButton).width(400).height(100).pad(30).left();
         table.row();
-        table.add(quitButton).width(400).height(150).pad(10).left();
+        table.add(quitButton).width(400).height(100).pad(30).left();
 
         playButton.getLabel().setAlignment(Align.left);
         settingsButton.getLabel().setAlignment(Align.left);
