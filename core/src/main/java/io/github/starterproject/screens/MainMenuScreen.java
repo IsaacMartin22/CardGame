@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.starterproject.game.TheGameClass;
@@ -52,10 +53,11 @@ public class MainMenuScreen implements Screen {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle(
             game.skin.get(TextButton.TextButtonStyle.class));
         buttonStyle.font = buttonFont;
+        buttonStyle.fontColor = Color.CHARTREUSE;
         buttonStyle.up = null;
         buttonStyle.down = null;
         buttonStyle.checked = null;
-        buttonStyle.over = game.skin.newDrawable("purple", Color.PURPLE);
+        buttonStyle.over = game.skin.newDrawable("white", Color.PURPLE);
         buttonStyle.disabled = null;
 
         TextButton playButton = new TextButton("PLAY", buttonStyle);
@@ -78,6 +80,14 @@ public class MainMenuScreen implements Screen {
         table.add(settingsButton).width(400).height(150).pad(10).left();
         table.row();
         table.add(quitButton).width(400).height(150).pad(10).left();
+
+        playButton.getLabel().setAlignment(Align.left);
+        settingsButton.getLabel().setAlignment(Align.left);
+        quitButton.getLabel().setAlignment(Align.left);
+
+        playButton.getLabel().setFontScale(0.6f);
+        settingsButton.getLabel().setFontScale(0.6f);
+        quitButton.getLabel().setFontScale(0.6f);
 
         stage.addActor(backgroundImage);
         stage.addActor(table);
