@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
+import io.github.starterproject.actions.RamAction;
 
 public class EnemyActor extends Group {
     private static final float IMAGE_SIZE = 400f;
@@ -32,6 +33,13 @@ public class EnemyActor extends Group {
 
         setSize(IMAGE_SIZE, IMAGE_SIZE + LABEL_HEIGHT * 2f + LABEL_SPACING + PADDING * 2f);
         layoutActor();
+    }
+
+    public void ramPlayer(float playerX, Runnable onImpact, Runnable onComplete) {
+        textureImage.clearActions();
+        layoutActor();
+        float distance = playerX - getX() + textureImage.getWidth() * 0.5f;
+        textureImage.addAction(new RamAction(distance, onImpact, onComplete));
     }
 
     public void setStats(int currentHealth, int maxHealth, int currentBlock) {

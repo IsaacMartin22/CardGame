@@ -202,21 +202,26 @@ public class BattleScreen implements Screen {
                 if (playingCardAnimation) {
                     return;
                 }
-                int damageTaken = battle.endPlayerTurn();
-                if (damageTaken > 0) {
-                    shakeScreen();
-                }
-                if (battle.getBattleResult() == Battle.BattleResult.DEFEAT) {
-                    game.screenStack.push(new DeathScreen(game));
-                    return;
-                }
-                if (battle.getBattleResult() == Battle.BattleResult.VICTORY) {
-                    game.screenStack.push(new VictoryScreen(game, BattleScreen.this));
-                    return;
-                }
-
-                int drawnCards = battle.endEnemyTurn();
-                refreshHandView(drawnCards);
+                playingCardAnimation = true;
+                enemyActor.ramPlayer(playerActor.getX(), () -> {
+                    int damageTaken = battle.endPlayerTurn();
+                    refreshHandView(0);
+                    if (damageTaken > 0) {
+                        shakeScreen();
+                    }
+                }, () -> {
+                    playingCardAnimation = false;
+                    if (battle.getBattleResult() == Battle.BattleResult.DEFEAT) {
+                        game.screenStack.push(new DeathScreen(game));
+                    }
+                    else if (battle.getBattleResult() == Battle.BattleResult.VICTORY) {
+                        game.screenStack.push(new VictoryScreen(game, BattleScreen.this));
+                    }
+                    else {
+                        int drawnCards = battle.endEnemyTurn();
+                        refreshHandView(drawnCards);
+                    }
+                });
             }
         });
 
