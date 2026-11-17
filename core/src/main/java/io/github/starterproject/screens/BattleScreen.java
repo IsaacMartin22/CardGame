@@ -74,6 +74,8 @@ public class BattleScreen implements Screen {
     private EnemyActor enemyActor;
     private PlayerActor playerActor;
     private Table enemyStatusTable;
+    private Table enemyNameTable;
+    private boolean enemyDefeatFadeStarted;
     private boolean playingCardAnimation;
     private boolean leavingBattle;
     private boolean playerExitFinished;
@@ -184,7 +186,7 @@ public class BattleScreen implements Screen {
             }
         };
         enemyName.setFontScale(1.2f);
-        Table enemyNameTable = new Table();
+        enemyNameTable = new Table();
         enemyNameTable.setFillParent(true);
         enemyNameTable.setTouchable(Touchable.disabled);
         enemyNameTable.top().padTop(runInfoOverlay.getHeight() + 24f);
@@ -261,6 +263,16 @@ public class BattleScreen implements Screen {
         playerActor.setStats(battle.getPlayerHealth(), battle.getPlayerMaxHealth(), battle.getPlayerBlock(),
             battle.getPlayerVelocity());
         enemyActor.setStats(battle.getEnemyHealth(), battle.getEnemyMaxHealth(), battle.getEnemyBlock());
+        if (!enemyDefeatFadeStarted && battle.getEnemyHealth() <= 0) {
+            enemyDefeatFadeStarted = true;
+            enemyActor.setTouchable(Touchable.disabled);
+            enemyActor.addAction(Actions.fadeOut(0.5f));
+            enemyStatusTable.addAction(Actions.fadeOut(0.5f));
+            if (enemyNameTable.getStage() != null) {
+                enemyNameTable.clearActions();
+                enemyNameTable.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.removeActor()));
+            }
+        }
         updateEnemyStatuses();
         stage.act(delta);
         layoutBattlefield();

@@ -85,11 +85,11 @@ public class Battle {
 
         boolean played = false;
         if (card instanceof Strike) {
-            enemy.currentHP -= 6 * game.player.getVelocity();
+            enemy.currentHP = Math.max(0, enemy.currentHP - 6 * game.player.getVelocity());
             played = true;
         }
         else if (card instanceof Skewer) {
-            enemy.currentHP -= 9 * game.player.getVelocity();
+            enemy.currentHP = Math.max(0, enemy.currentHP - 9 * game.player.getVelocity());
             played = true;
         }
         else if (card instanceof Defend) {
@@ -119,7 +119,7 @@ public class Battle {
         else {
             switch (card.getType()) {
                 case ATTACK:
-                    enemy.currentHP -= 30 * game.player.getVelocity();
+                    enemy.currentHP = Math.max(0, enemy.currentHP - 30 * game.player.getVelocity());
                     played = true;
                     break;
                 case SKILL:

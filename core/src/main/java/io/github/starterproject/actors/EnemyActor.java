@@ -46,7 +46,7 @@ public class EnemyActor extends Group {
     }
 
     public void setStats(int currentHealth, int maxHealth, int currentBlock) {
-        healthLabel.setText("HP: " + currentHealth + "/" + maxHealth);
+        healthLabel.setText("HP: " + Math.max(0, currentHealth) + "/" + maxHealth);
         blockLabel.setText("Block: " + currentBlock);
     }
 
