@@ -18,6 +18,8 @@ public class PlayerActor extends Group {
     private final Image textureImage;
     private final Label healthLabel;
     private final Label blockLabel;
+    private int velocity = 1;
+    private boolean ramming;
 
     public PlayerActor(Skin skin, Texture texture) {
         this.textureImage = new Image(texture);
@@ -41,8 +43,10 @@ public class PlayerActor extends Group {
     public void ramEnemy(float enemyX, Runnable onImpact, Runnable onComplete) {
         textureImage.clearActions();
         layoutActor();
+        ramming = true;
         float distance = enemyX - getX() - textureImage.getWidth() * 0.5f;
         textureImage.addAction(new RamAction(distance, onImpact, () -> {
+            ramming = false;
             startIdleAnimation();
             onComplete.run();
         }));
@@ -50,16 +54,24 @@ public class PlayerActor extends Group {
 
     private void startIdleAnimation() {
         textureImage.addAction(Actions.forever(Actions.sequence(
-            Actions.moveBy(-1.5f, 0f, 0.05f),
-            Actions.moveBy(3f, 1f, 0.1f),
-            Actions.moveBy(-1.5f, -1f, 0.05f),
+            Actions.moveBy(-1.5f * velocity * velocity, 0f, 0.05f),
+            Actions.moveBy(3f * velocity * velocity, velocity * velocity, 0.1f),
+            Actions.moveBy(-1.5f * velocity * velocity, -velocity * velocity, 0.05f),
             Actions.delay(0.8f)
         )));
     }
 
-    public void setStats(int currentHealth, int maxHealth, int currentBlock) {
+    public void setStats(int currentHealth, int maxHealth, int currentBlock, int velocity) {
+        if (this.velocity != velocity) {
+            this.velocity = velocity;
+            if (!ramming) {
+                textureImage.clearActions();
+                layoutActor();
+                startIdleAnimation();
+            }
+        }
         healthLabel.setText("HP: " + currentHealth + "/" + maxHealth);
-        blockLabel.setText("Block: " + currentBlock);
+        blockLabel.setText("Block: " + currentBlock + "   Velocity: " + velocity);
     }
 
     private void layoutActor() {

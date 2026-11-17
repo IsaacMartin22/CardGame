@@ -3,6 +3,7 @@ package io.github.starterproject.game;
 import io.github.starterproject.cards.Card;
 import io.github.starterproject.cards.CardType;
 import io.github.starterproject.cards.Defend;
+import io.github.starterproject.cards.Quickstep;
 import io.github.starterproject.cards.Search;
 import io.github.starterproject.cards.Shelter;
 import io.github.starterproject.cards.Skewer;
@@ -84,19 +85,19 @@ public class Battle {
 
         boolean played = false;
         if (card instanceof Strike) {
-            enemy.currentHP -= 6;
+            enemy.currentHP -= 6 * game.player.getVelocity();
             played = true;
         }
         else if (card instanceof Skewer) {
-            enemy.currentHP -= 9;
+            enemy.currentHP -= 9 * game.player.getVelocity();
             played = true;
         }
         else if (card instanceof Defend) {
-            game.player.currentBlock += 5;
+            game.player.currentBlock += 5 / game.player.getVelocity();
             played = true;
         }
         else if (card instanceof Shelter) {
-            game.player.currentBlock += 8;
+            game.player.currentBlock += 8 / game.player.getVelocity();
             played = true;
         }
         else if (card instanceof Search) {
@@ -111,14 +112,18 @@ public class Battle {
             enemy.applyWeak(3);
             played = true;
         }
+        else if (card instanceof Quickstep) {
+            game.player.setVelocity(game.player.getVelocity() + 1);
+            played = true;
+        }
         else {
             switch (card.getType()) {
                 case ATTACK:
-                    enemy.currentHP -= 30;
+                    enemy.currentHP -= 30 * game.player.getVelocity();
                     played = true;
                     break;
                 case SKILL:
-                    game.player.currentBlock += 5;
+                    game.player.currentBlock += 5 / game.player.getVelocity();
                     played = true;
                     break;
                 case POWER:
@@ -238,6 +243,10 @@ public class Battle {
 
     public int getPlayerBlock() {
         return game.player.currentBlock;
+    }
+
+    public int getPlayerVelocity() {
+        return game.player.getVelocity();
     }
 
     public enum BattleResult {

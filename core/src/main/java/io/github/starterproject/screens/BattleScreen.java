@@ -257,7 +257,8 @@ public class BattleScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
 
-        playerActor.setStats(battle.getPlayerHealth(), battle.getPlayerMaxHealth(), battle.getPlayerBlock());
+        playerActor.setStats(battle.getPlayerHealth(), battle.getPlayerMaxHealth(), battle.getPlayerBlock(),
+            battle.getPlayerVelocity());
         enemyActor.setStats(battle.getEnemyHealth(), battle.getEnemyMaxHealth(), battle.getEnemyBlock());
         updateEnemyStatuses();
         stage.act(delta);

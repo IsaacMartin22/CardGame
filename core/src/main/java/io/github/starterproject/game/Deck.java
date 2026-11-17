@@ -19,11 +19,16 @@ public class Deck {
 //            addCard(new Defend());
 //            addCard(new Strike());
 //        }
-        addCard(new Sunder());
-        addCard(new Debilitate());
         addCard(new Skewer());
-        addCard(new Shelter());
-        addCard(new Search());
+        addCard(new Skewer());
+        addCard(new Skewer());
+        addCard(new Skewer());
+        addCard(new Skewer());
+        addCard(new Quickstep());
+        addCard(new Quickstep());
+        addCard(new Quickstep());
+        addCard(new Quickstep());
+        addCard(new Quickstep());
     }
 
     public List<Card> getCards() {
