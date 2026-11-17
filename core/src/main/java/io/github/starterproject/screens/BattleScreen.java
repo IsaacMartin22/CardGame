@@ -207,6 +207,7 @@ public class BattleScreen implements Screen {
                 playingCardAnimation = true;
                 enemyActor.ramPlayer(playerActor.getX(), () -> {
                     int damageTaken = battle.endPlayerTurn();
+                    playerActor.showDamage(damageTaken);
                     refreshHandView(0);
                     if (damageTaken > 0) {
                         shakeScreen();
@@ -359,11 +360,13 @@ public class BattleScreen implements Screen {
             return false;
         }
         boolean shouldPlayAttackSound = battle.getEnemyHealth() < enemyHealthBeforePlay;
+        int damageDealt = Math.max(0, enemyHealthBeforePlay - battle.getEnemyHealth());
         boolean shouldPlayBlockSound = battle.getPlayerBlock() > blockBeforePlay;
         Battle.BattleResult battleResult = battle.getBattleResult();
         playingCardAnimation = true;
         Runnable playSounds = () -> {
             if (shouldPlayAttackSound) {
+                enemyActor.showDamage(damageDealt);
                 game.playSound(attackSound, ATTACK_SOUND_VOLUME);
             }
             if (shouldPlayBlockSound) {

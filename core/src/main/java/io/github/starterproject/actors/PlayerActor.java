@@ -1,7 +1,9 @@
 package io.github.starterproject.actors;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -72,6 +74,26 @@ public class PlayerActor extends Group {
         }
         healthLabel.setText("HP: " + currentHealth + "/" + maxHealth);
         blockLabel.setText("Block: " + currentBlock + "   Velocity: " + velocity);
+    }
+
+    public void showDamage(int amount) {
+        if (amount <= 0) {
+            return;
+        }
+
+        Label damageLabel = new Label(String.valueOf(amount), healthLabel.getStyle());
+        damageLabel.setAlignment(Align.center);
+        damageLabel.setFontScale(2f);
+        damageLabel.setColor(Color.RED);
+        damageLabel.setTouchable(Touchable.disabled);
+        damageLabel.pack();
+        damageLabel.setPosition((getWidth() - damageLabel.getWidth()) / 2f,
+            textureImage.getY() + textureImage.getHeight() * 0.55f);
+        addActor(damageLabel);
+        damageLabel.addAction(Actions.sequence(
+            Actions.parallel(Actions.moveBy(0f, 48f, 0.8f), Actions.fadeOut(0.8f)),
+            Actions.removeActor()
+        ));
     }
 
     private void layoutActor() {
